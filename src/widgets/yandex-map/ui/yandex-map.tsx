@@ -16,6 +16,14 @@ interface YandexMapProps {
   height?: number;
   places?: Place[];
   onPlaceClick?: (place: Place) => void;
+  showBorders?: boolean;
+  borderStyle?: {
+    strokeColor: string;
+    strokeOpacity: number;
+    strokeWidth: number;
+    fillColor: string;
+    fillOpacity: number;
+  };
 }
 
 export const YandexMap = ({ 
@@ -23,11 +31,14 @@ export const YandexMap = ({
   height = 1000,
   places = [],
   onPlaceClick,
+  showBorders = false,
+  borderStyle,
 }: YandexMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const isInitializedRef = useRef(false);
   const placemarksRef = useRef<any[]>([]);
+  const borderPolygonRef = useRef<any>(null);
 
   useEffect(() => {
     // Предотвращаем повторную инициализацию в Strict Mode
@@ -45,11 +56,51 @@ export const YandexMap = ({
               controls: ['zoomControl', 'fullscreenControl'],
             });
 
+            // Добавляем границы (если включено)
+            if (showBorders) {
+              addBorder();
+            }
+
             // Добавляем маркеры после создания карты
             addPlacemarks();
           }
         });
       }
+    };
+
+    // Функция добавления границ Таиланда
+    const addBorder = () => {
+      if (!mapInstanceRef.current || !window.ymaps) return;
+
+      // Импортируем координаты динамически
+      import('@/shared/data/thailand-borders').then(({ THAILAND_BORDER_COORDINATES, BORDER_STYLE }) => {
+        // Используем переданный стиль или стиль по умолчанию
+        const style = borderStyle || BORDER_STYLE;
+
+        // Создаем полигон границы
+        const polygon = new window.ymaps.Polygon(
+          [THAILAND_BORDER_COORDINATES],
+          {
+            hintContent: 'Таиланд',
+          },
+          {
+            strokeColor: style.strokeColor,
+            strokeOpacity: style.strokeOpacity,
+            strokeWidth: style.strokeWidth,
+            fillColor: style.fillColor,
+            fillOpacity: style.fillOpacity,
+          }
+        );
+
+        // Удаляем старую границу если есть
+        if (borderPolygonRef.current) {
+          mapInstanceRef.current.geoObjects.remove(borderPolygonRef.current);
+        }
+
+        // Добавляем на карту
+        mapInstanceRef.current.geoObjects.add(polygon);
+        borderPolygonRef.current = polygon;
+      });
     };
 
     // Функция добавления маркеров на карту
@@ -114,8 +165,9 @@ export const YandexMap = ({
         mapInstanceRef.current = null;
       }
       placemarksRef.current = [];
+      borderPolygonRef.current = null;
     };
-  }, []);
+  }, [showBorders]);
 
   // Обновляем маркеры при изменении списка мест
   useEffect(() => {
