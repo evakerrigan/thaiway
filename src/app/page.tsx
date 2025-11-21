@@ -44,6 +44,17 @@ export default function Home() {
             places={PLACES}
             onPlaceClick={handlePlaceClick}
             showBorders={true}
+            showRoute={true}
+            routePlaceIds={[
+              'bangkok',
+              'phitsanulok',
+              'ayutthaya',
+              'lopburi',
+              'nakhonsawan',
+              'chiangrai',
+              'chiangmai',
+              'mae-ya-waterfall',
+            ]}
           />
         </div>
       </div>
