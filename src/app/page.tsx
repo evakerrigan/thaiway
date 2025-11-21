@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Container } from '@/shared/ui/container';
 import { YandexMap } from '@/widgets/yandex-map';
 import { PlaceModal } from '@/widgets/place-modal';
+import { WeatherWidget } from '@/widgets/weather-widget';
 import { PLACES } from '@/shared/data';
 import { Place } from '@/shared/types';
 
@@ -26,6 +27,11 @@ export default function Home() {
 
   return (
     <Container className="py-12">
+      {/* Виджет погоды в правом верхнем углу */}
+      <div className="fixed top-24 right-8 z-40 w-72">
+        <WeatherWidget />
+      </div>
+
       <div className="flex flex-col items-center gap-8">
         <h1 className="text-4xl font-bold text-gray-900">Страница 1</h1>
         <p className="text-lg text-gray-600 text-center max-w-2xl">
