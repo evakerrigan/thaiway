@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { THAILAND_CENTER, THAILAND_ZOOM, YANDEX_MAPS_CONFIG } from '@/shared/api';
+import { Place } from '@/shared/types';
 
 declare global {
   interface Window {
@@ -13,12 +14,20 @@ declare global {
 interface YandexMapProps {
   width?: number;
   height?: number;
+  places?: Place[];
+  onPlaceClick?: (place: Place) => void;
 }
 
-export const YandexMap = ({ width = 1000, height = 1000 }: YandexMapProps) => {
+export const YandexMap = ({ 
+  width = 1000, 
+  height = 1000,
+  places = [],
+  onPlaceClick,
+}: YandexMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const isInitializedRef = useRef(false);
+  const placemarksRef = useRef<any[]>([]);
 
   useEffect(() => {
     // Предотвращаем повторную инициализацию в Strict Mode
@@ -35,9 +44,48 @@ export const YandexMap = ({ width = 1000, height = 1000 }: YandexMapProps) => {
               zoom: THAILAND_ZOOM,
               controls: ['zoomControl', 'fullscreenControl'],
             });
+
+            // Добавляем маркеры после создания карты
+            addPlacemarks();
           }
         });
       }
+    };
+
+    // Функция добавления маркеров на карту
+    const addPlacemarks = () => {
+      if (!mapInstanceRef.current || !window.ymaps) return;
+
+      // Удаляем старые маркеры
+      placemarksRef.current.forEach(placemark => {
+        mapInstanceRef.current.geoObjects.remove(placemark);
+      });
+      placemarksRef.current = [];
+
+      // Добавляем новые маркеры
+      places.forEach(place => {
+        const placemark = new window.ymaps.Placemark(
+          [place.coordinates.lat, place.coordinates.lng],
+          {
+            balloonContent: place.name,
+            hintContent: place.name,
+          },
+          {
+            preset: getMarkerPreset(place.category),
+            iconColor: getMarkerColor(place.category),
+          }
+        );
+
+        // Обработчик клика по маркеру
+        if (onPlaceClick) {
+          placemark.events.add('click', () => {
+            onPlaceClick(place);
+          });
+        }
+
+        mapInstanceRef.current.geoObjects.add(placemark);
+        placemarksRef.current.push(placemark);
+      });
     };
 
     // Проверяем, загружен ли уже скрипт Яндекс.Карт
@@ -65,8 +113,45 @@ export const YandexMap = ({ width = 1000, height = 1000 }: YandexMapProps) => {
         mapInstanceRef.current.destroy();
         mapInstanceRef.current = null;
       }
+      placemarksRef.current = [];
     };
   }, []);
+
+  // Обновляем маркеры при изменении списка мест
+  useEffect(() => {
+    if (mapInstanceRef.current && window.ymaps && places.length > 0) {
+      // Удаляем старые маркеры
+      placemarksRef.current.forEach(placemark => {
+        mapInstanceRef.current.geoObjects.remove(placemark);
+      });
+      placemarksRef.current = [];
+
+      // Добавляем новые маркеры
+      places.forEach(place => {
+        const placemark = new window.ymaps.Placemark(
+          [place.coordinates.lat, place.coordinates.lng],
+          {
+            balloonContent: place.name,
+            hintContent: place.name,
+          },
+          {
+            preset: getMarkerPreset(place.category),
+            iconColor: getMarkerColor(place.category),
+          }
+        );
+
+        // Обработчик клика по маркеру
+        if (onPlaceClick) {
+          placemark.events.add('click', () => {
+            onPlaceClick(place);
+          });
+        }
+
+        mapInstanceRef.current.geoObjects.add(placemark);
+        placemarksRef.current.push(placemark);
+      });
+    }
+  }, [places, onPlaceClick]);
 
   return (
     <div
@@ -76,4 +161,27 @@ export const YandexMap = ({ width = 1000, height = 1000 }: YandexMapProps) => {
     />
   );
 };
+
+// Вспомогательные функции для стилизации маркеров
+function getMarkerPreset(category?: Place['category']): string {
+  const presets: Record<NonNullable<Place['category']>, string> = {
+    city: 'islands#redIcon',
+    island: 'islands#blueIcon',
+    beach: 'islands#lightBlueIcon',
+    temple: 'islands#violetIcon',
+    other: 'islands#grayIcon',
+  };
+  return category ? presets[category] : 'islands#redIcon';
+}
+
+function getMarkerColor(category?: Place['category']): string {
+  const colors: Record<NonNullable<Place['category']>, string> = {
+    city: '#FF0000',
+    island: '#1E98FF',
+    beach: '#56CCF2',
+    temple: '#9C27B0',
+    other: '#757575',
+  };
+  return category ? colors[category] : '#FF0000';
+}
 
