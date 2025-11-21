@@ -37,6 +37,7 @@ export default function Home() {
             height={1000} 
             places={PLACES}
             onPlaceClick={handlePlaceClick}
+            showBorders={true}
           />
         </div>
       </div>
