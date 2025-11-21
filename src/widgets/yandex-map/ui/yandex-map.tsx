@@ -24,6 +24,13 @@ interface YandexMapProps {
     fillColor: string;
     fillOpacity: number;
   };
+  showRoute?: boolean;
+  routeStyle?: {
+    strokeColor: string;
+    strokeOpacity: number;
+    strokeWidth: number;
+  };
+  routePlaceIds?: string[];
 }
 
 export const YandexMap = ({ 
@@ -33,12 +40,16 @@ export const YandexMap = ({
   onPlaceClick,
   showBorders = false,
   borderStyle,
+  showRoute = false,
+  routeStyle,
+  routePlaceIds = [],
 }: YandexMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const isInitializedRef = useRef(false);
   const placemarksRef = useRef<any[]>([]);
   const borderPolygonRef = useRef<any>(null);
+  const routePolylineRef = useRef<any>(null);
 
   useEffect(() => {
     // Предотвращаем повторную инициализацию в Strict Mode
@@ -59,6 +70,11 @@ export const YandexMap = ({
             // Добавляем границы (если включено)
             if (showBorders) {
               addBorder();
+            }
+
+            // Добавляем маршрут (если включено)
+            if (showRoute) {
+              addRoute();
             }
 
             // Добавляем маркеры после создания карты
@@ -103,6 +119,39 @@ export const YandexMap = ({
       });
     };
 
+    // Функция добавления маршрута путешествия
+    const addRoute = () => {
+      if (!mapInstanceRef.current || !window.ymaps) return;
+
+      // Импортируем координаты маршрута
+      import('@/shared/data/travel-route').then(({ TRAVEL_ROUTE_COORDINATES, ROUTE_STYLE }) => {
+        // Используем переданный стиль или стиль по умолчанию
+        const style = routeStyle || ROUTE_STYLE;
+
+        // Создаем линию маршрута
+        const polyline = new window.ymaps.Polyline(
+          TRAVEL_ROUTE_COORDINATES,
+          {
+            hintContent: 'Маршрут путешествия',
+          },
+          {
+            strokeColor: style.strokeColor,
+            strokeOpacity: style.strokeOpacity,
+            strokeWidth: style.strokeWidth,
+          }
+        );
+
+        // Удаляем старый маршрут если есть
+        if (routePolylineRef.current) {
+          mapInstanceRef.current.geoObjects.remove(routePolylineRef.current);
+        }
+
+        // Добавляем на карту
+        mapInstanceRef.current.geoObjects.add(polyline);
+        routePolylineRef.current = polyline;
+      });
+    };
+
     // Функция добавления маркеров на карту
     const addPlacemarks = () => {
       if (!mapInstanceRef.current || !window.ymaps) return;
@@ -115,6 +164,9 @@ export const YandexMap = ({
 
       // Добавляем новые маркеры
       places.forEach(place => {
+        // Проверяем, является ли место частью маршрута
+        const isRoutePlaceId = routePlaceIds.includes(place.id);
+        
         const placemark = new window.ymaps.Placemark(
           [place.coordinates.lat, place.coordinates.lng],
           {
@@ -122,8 +174,8 @@ export const YandexMap = ({
             hintContent: place.name,
           },
           {
-            preset: getMarkerPreset(place.category),
-            iconColor: getMarkerColor(place.category),
+            preset: isRoutePlaceId ? 'islands#circleDotIcon' : getMarkerPreset(place.category),
+            iconColor: isRoutePlaceId ? '#00CED1' : getMarkerColor(place.category),
           }
         );
 
@@ -166,8 +218,9 @@ export const YandexMap = ({
       }
       placemarksRef.current = [];
       borderPolygonRef.current = null;
+      routePolylineRef.current = null;
     };
-  }, [showBorders]);
+  }, [showBorders, showRoute]);
 
   // Обновляем маркеры при изменении списка мест
   useEffect(() => {
@@ -180,6 +233,9 @@ export const YandexMap = ({
 
       // Добавляем новые маркеры
       places.forEach(place => {
+        // Проверяем, является ли место частью маршрута
+        const isRoutePlaceId = routePlaceIds.includes(place.id);
+        
         const placemark = new window.ymaps.Placemark(
           [place.coordinates.lat, place.coordinates.lng],
           {
@@ -187,8 +243,8 @@ export const YandexMap = ({
             hintContent: place.name,
           },
           {
-            preset: getMarkerPreset(place.category),
-            iconColor: getMarkerColor(place.category),
+            preset: isRoutePlaceId ? 'islands#circleDotIcon' : getMarkerPreset(place.category),
+            iconColor: isRoutePlaceId ? '#00CED1' : getMarkerColor(place.category),
           }
         );
 
@@ -203,7 +259,7 @@ export const YandexMap = ({
         placemarksRef.current.push(placemark);
       });
     }
-  }, [places, onPlaceClick]);
+  }, [places, onPlaceClick, routePlaceIds]);
 
   return (
     <div
