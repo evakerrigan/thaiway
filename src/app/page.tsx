@@ -5,6 +5,7 @@ import { Container } from '@/shared/ui/container';
 import { YandexMap } from '@/widgets/yandex-map';
 import { PlaceModal } from '@/widgets/place-modal';
 import { WeatherWidget } from '@/widgets/weather-widget';
+import { Calculator } from '@/widgets/calculator';
 import { PLACES } from '@/shared/data';
 import { Place } from '@/shared/types';
 
@@ -27,16 +28,19 @@ export default function Home() {
 
   return (
     <Container className="py-12">
-      {/* Виджет погоды в правом верхнем углу */}
-      <div className="fixed top-24 right-8 z-40 w-72">
-        <WeatherWidget />
-      </div>
-
       <div className="flex flex-col items-center gap-8">
         <h1 className="text-4xl font-bold text-gray-900">Страница 1</h1>
-        <p className="text-lg text-gray-600 text-center max-w-2xl">
-          Добро пожаловать на главную страницу! Кликните на маркеры на карте, чтобы узнать больше о местах Таиланда.
-        </p>
+        
+        {/* Калькулятор (2/3) и Погода (1/3) в одну строку */}
+        <div className="w-full flex gap-6">
+          <div className="flex-[2]">
+            <Calculator />
+          </div>
+          <div className="flex-[1]">
+            <WeatherWidget />
+          </div>
+        </div>
+
         <div className="mt-8">
           <YandexMap 
             width={1000} 
