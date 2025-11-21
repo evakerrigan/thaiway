@@ -5,8 +5,8 @@ export const ROUTES = {
 } as const;
 
 export const NAV_ITEMS = [
-  { label: 'Страница 1', href: ROUTES.HOME },
-  { label: 'Страница 2', href: ROUTES.PAGE_2 },
-  { label: 'Страница 3', href: ROUTES.PAGE_3 },
+  { label: 'Главная', href: ROUTES.HOME },
+  { label: 'Калькулятор', href: ROUTES.PAGE_2 },
+  { label: 'Топ 11 мест', href: ROUTES.PAGE_3 },
 ] as const;
 

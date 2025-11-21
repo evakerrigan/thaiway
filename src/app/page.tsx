@@ -29,7 +29,7 @@ export default function Home() {
   return (
     <Container className="py-12">
       <div className="flex flex-col items-center gap-8">
-        <h1 className="text-4xl font-bold text-gray-900">Страница 1</h1>
+        <h1 className="text-4xl font-bold text-gray-900">Главная</h1>
         
         {/* Калькулятор (2/3) и Погода (1/3) в одну строку */}
         <div className="w-full flex gap-6">
