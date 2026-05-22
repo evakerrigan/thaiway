@@ -4,9 +4,57 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { THAILAND_CENTER, THAILAND_ZOOM, YANDEX_MAPS_CONFIG } from '@/shared/api';
 import { Place } from '@/shared/types';
 
+interface YandexGeoObject {
+  events: {
+    add(event: string, handler: () => void): void;
+  };
+}
+
+interface YandexGeoObjectCollection {
+  add(geoObject: YandexGeoObject): void;
+  remove(geoObject: YandexGeoObject): void;
+}
+
+interface YandexMapContainer {
+  fitToViewport?: () => void;
+}
+
+interface YandexMapInstance {
+  destroy(): void;
+  geoObjects: YandexGeoObjectCollection;
+  setBounds(
+    bounds: number[][],
+    options?: { checkZoomRange?: boolean; zoomMargin?: number }
+  ): void;
+  container?: YandexMapContainer;
+}
+
+interface YandexMapsApi {
+  ready(callback: () => void): void;
+  Map: new (
+    container: HTMLElement,
+    state: { center: number[]; zoom: number; controls?: string[] }
+  ) => YandexMapInstance;
+  Polygon: new (
+    coordinates: number[][][],
+    properties?: Record<string, unknown>,
+    options?: Record<string, unknown>
+  ) => YandexGeoObject;
+  Polyline: new (
+    coordinates: number[][],
+    properties?: Record<string, unknown>,
+    options?: Record<string, unknown>
+  ) => YandexGeoObject;
+  Placemark: new (
+    coordinates: number[],
+    properties?: Record<string, unknown>,
+    options?: Record<string, unknown>
+  ) => YandexGeoObject;
+}
+
 declare global {
   interface Window {
-    ymaps: any;
+    ymaps: YandexMapsApi;
     ymapsLoaded?: boolean;
   }
 }
@@ -56,11 +104,11 @@ export const YandexMap = ({
   fitToPlaces = false,
 }: YandexMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<any>(null);
+  const mapInstanceRef = useRef<YandexMapInstance | null>(null);
   const isInitializedRef = useRef(false);
-  const placemarksRef = useRef<any[]>([]);
-  const borderPolygonRef = useRef<any>(null);
-  const routePolylineRef = useRef<any>(null);
+  const placemarksRef = useRef<YandexGeoObject[]>([]);
+  const borderPolygonRef = useRef<YandexGeoObject | null>(null);
+  const routePolylineRef = useRef<YandexGeoObject | null>(null);
 
   const borderStyleRef = useRef(borderStyle);
   borderStyleRef.current = borderStyle;
@@ -182,10 +230,11 @@ export const YandexMap = ({
   }, [showRoute, isMapReady]);
 
   useEffect(() => {
-    if (!isMapReady || !mapInstanceRef.current || !window.ymaps) return;
+    const map = mapInstanceRef.current;
+    if (!isMapReady || !map || !window.ymaps) return;
 
     placemarksRef.current.forEach((placemark) => {
-      mapInstanceRef.current.geoObjects.remove(placemark);
+      map.geoObjects.remove(placemark);
     });
     placemarksRef.current = [];
 
@@ -224,18 +273,18 @@ export const YandexMap = ({
         });
       }
 
-      mapInstanceRef.current.geoObjects.add(placemark);
+      map.geoObjects.add(placemark);
       placemarksRef.current.push(placemark);
     });
 
-    if (fitToPlaces && places.length > 0 && mapInstanceRef.current) {
+    if (fitToPlaces && places.length > 0) {
       const lats = places.map((p) => p.coordinates.lat);
       const lngs = places.map((p) => p.coordinates.lng);
       const bounds = [
         [Math.min(...lats), Math.min(...lngs)],
         [Math.max(...lats), Math.max(...lngs)],
       ];
-      mapInstanceRef.current.setBounds(bounds, {
+      map.setBounds(bounds, {
         checkZoomRange: true,
         zoomMargin: 40,
       });
