@@ -32,6 +32,12 @@ interface YandexMapProps {
     strokeWidth: number;
   };
   routePlaceIds?: string[];
+  /** Центр карты по умолчанию. */
+  center?: { lat: number; lng: number };
+  /** Зум карты по умолчанию. */
+  zoom?: number;
+  /** Подогнать видимую область, чтобы все маркеры поместились. */
+  fitToPlaces?: boolean;
 }
 
 export const YandexMap = ({
@@ -45,6 +51,9 @@ export const YandexMap = ({
   showRoute = false,
   routeStyle,
   routePlaceIds = [],
+  center,
+  zoom,
+  fitToPlaces = false,
 }: YandexMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
@@ -53,7 +62,6 @@ export const YandexMap = ({
   const borderPolygonRef = useRef<any>(null);
   const routePolylineRef = useRef<any>(null);
 
-  // Refs for styles (avoid stale closures without adding to deps)
   const borderStyleRef = useRef(borderStyle);
   borderStyleRef.current = borderStyle;
   const routeStyleRef = useRef(routeStyle);
@@ -61,7 +69,6 @@ export const YandexMap = ({
 
   const [isMapReady, setIsMapReady] = useState(false);
 
-  // ── Init effect (runs once) ───────────────────────────────────────────────
   useEffect(() => {
     if (isInitializedRef.current) return;
     isInitializedRef.current = true;
@@ -70,9 +77,11 @@ export const YandexMap = ({
       if (window.ymaps && mapRef.current && !mapInstanceRef.current) {
         window.ymaps.ready(() => {
           if (!mapInstanceRef.current && mapRef.current) {
+            const initialCenter = center ?? THAILAND_CENTER;
+            const initialZoom = zoom ?? THAILAND_ZOOM;
             mapInstanceRef.current = new window.ymaps.Map(mapRef.current, {
-              center: [THAILAND_CENTER.lat, THAILAND_CENTER.lng],
-              zoom: THAILAND_ZOOM,
+              center: [initialCenter.lat, initialCenter.lng],
+              zoom: initialZoom,
               controls: ['zoomControl', 'fullscreenControl'],
             });
             setIsMapReady(true);
@@ -105,33 +114,35 @@ export const YandexMap = ({
       borderPolygonRef.current = null;
       routePolylineRef.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ── Borders effect (reactive) ─────────────────────────────────────────────
   useEffect(() => {
     if (!isMapReady || !mapInstanceRef.current || !window.ymaps) return;
 
     if (showBorders) {
-      import('@/shared/data/thailand-borders').then(({ THAILAND_BORDER_COORDINATES, BORDER_STYLE }) => {
-        if (!mapInstanceRef.current) return;
-        const style = borderStyleRef.current || BORDER_STYLE;
-        const polygon = new window.ymaps.Polygon(
-          [THAILAND_BORDER_COORDINATES],
-          { hintContent: 'Таиланд' },
-          {
-            strokeColor: style.strokeColor,
-            strokeOpacity: style.strokeOpacity,
-            strokeWidth: style.strokeWidth,
-            fillColor: style.fillColor,
-            fillOpacity: style.fillOpacity,
+      import('@/shared/data/thailand-borders').then(
+        ({ THAILAND_BORDER_COORDINATES, BORDER_STYLE }) => {
+          if (!mapInstanceRef.current) return;
+          const style = borderStyleRef.current || BORDER_STYLE;
+          const polygon = new window.ymaps.Polygon(
+            [THAILAND_BORDER_COORDINATES],
+            { hintContent: 'Таиланд' },
+            {
+              strokeColor: style.strokeColor,
+              strokeOpacity: style.strokeOpacity,
+              strokeWidth: style.strokeWidth,
+              fillColor: style.fillColor,
+              fillOpacity: style.fillOpacity,
+            }
+          );
+          if (borderPolygonRef.current) {
+            mapInstanceRef.current.geoObjects.remove(borderPolygonRef.current);
           }
-        );
-        if (borderPolygonRef.current) {
-          mapInstanceRef.current.geoObjects.remove(borderPolygonRef.current);
+          mapInstanceRef.current.geoObjects.add(polygon);
+          borderPolygonRef.current = polygon;
         }
-        mapInstanceRef.current.geoObjects.add(polygon);
-        borderPolygonRef.current = polygon;
-      });
+      );
     } else {
       if (borderPolygonRef.current && mapInstanceRef.current) {
         mapInstanceRef.current.geoObjects.remove(borderPolygonRef.current);
@@ -140,7 +151,6 @@ export const YandexMap = ({
     }
   }, [showBorders, isMapReady]);
 
-  // ── Route effect (reactive) ───────────────────────────────────────────────
   useEffect(() => {
     if (!isMapReady || !mapInstanceRef.current || !window.ymaps) return;
 
@@ -171,7 +181,6 @@ export const YandexMap = ({
     }
   }, [showRoute, isMapReady]);
 
-  // ── Places effect (reactive) ──────────────────────────────────────────────
   useEffect(() => {
     if (!isMapReady || !mapInstanceRef.current || !window.ymaps) return;
 
@@ -182,16 +191,31 @@ export const YandexMap = ({
 
     places.forEach((place) => {
       const isRoutePlaceId = routePlaceIds.includes(place.id);
+      const hasRank = typeof place.rank === 'number';
+
+      let preset = getMarkerPreset(place.category);
+      let iconColor: string | undefined = getMarkerColor(place.category);
+      const properties: Record<string, unknown> = {
+        balloonContent: place.name,
+        hintContent: place.name,
+      };
+
+      if (isRoutePlaceId) {
+        preset = 'islands#circleDotIcon';
+        iconColor = '#00CED1';
+      } else if (hasRank) {
+        preset = 'islands#violetStretchyIcon';
+        iconColor = undefined;
+        properties.iconContent = String(place.rank);
+      }
+
+      const options: Record<string, unknown> = { preset };
+      if (iconColor !== undefined) options.iconColor = iconColor;
+
       const placemark = new window.ymaps.Placemark(
         [place.coordinates.lat, place.coordinates.lng],
-        {
-          balloonContent: place.name,
-          hintContent: place.name,
-        },
-        {
-          preset: isRoutePlaceId ? 'islands#circleDotIcon' : getMarkerPreset(place.category),
-          iconColor: isRoutePlaceId ? '#00CED1' : getMarkerColor(place.category),
-        }
+        properties,
+        options
       );
 
       if (onPlaceClick) {
@@ -203,9 +227,21 @@ export const YandexMap = ({
       mapInstanceRef.current.geoObjects.add(placemark);
       placemarksRef.current.push(placemark);
     });
-  }, [places, onPlaceClick, routePlaceIds, isMapReady]);
 
-  // ── Resize (full-width layout) ────────────────────────────────────────────
+    if (fitToPlaces && places.length > 0 && mapInstanceRef.current) {
+      const lats = places.map((p) => p.coordinates.lat);
+      const lngs = places.map((p) => p.coordinates.lng);
+      const bounds = [
+        [Math.min(...lats), Math.min(...lngs)],
+        [Math.max(...lats), Math.max(...lngs)],
+      ];
+      mapInstanceRef.current.setBounds(bounds, {
+        checkZoomRange: true,
+        zoomMargin: 40,
+      });
+    }
+  }, [places, onPlaceClick, routePlaceIds, isMapReady, fitToPlaces]);
+
   useEffect(() => {
     if (!isMapReady || !mapRef.current || !mapInstanceRef.current) return;
 

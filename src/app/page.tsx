@@ -46,15 +46,21 @@ export default function Home() {
 
   const showBorders = activeTags.includes('thailand');
   const showRoute = activeTags.includes('north-trip');
+  const showNorthTrip = activeTags.includes('north-trip');
+  const showTopPlaces = activeTags.includes('top-places');
 
-  // Маркеры маршрута принадлежат тегу "north-trip", остальные — тегу "top-places"
-  const routePlaces = PLACES.filter((p) => ROUTE_PLACE_IDS.includes(p.id));
-  const otherPlaces = PLACES.filter((p) => !ROUTE_PLACE_IDS.includes(p.id));
+  // Маркер видим, если активен соответствующий тег.
+  // Mae-Ya принадлежит и маршруту, и топ-местам — поэтому появится при любом из них.
+  const visiblePlaces = PLACES.filter((p) => {
+    const isRoute = ROUTE_PLACE_IDS.includes(p.id);
+    const isTop = typeof p.rank === 'number';
+    if (showNorthTrip && isRoute) return true;
+    if (showTopPlaces && isTop) return true;
+    return false;
+  });
 
-  const visiblePlaces = [
-    ...(activeTags.includes('north-trip') ? routePlaces : []),
-    ...(activeTags.includes('top-places') ? otherPlaces : []),
-  ];
+  // Для приоритета стиля route над top-places: passing routePlaceIds только если north-trip активен.
+  const activeRoutePlaceIds = showNorthTrip ? ROUTE_PLACE_IDS : [];
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
@@ -70,7 +76,7 @@ export default function Home() {
         onPlaceClick={handlePlaceClick}
         showBorders={showBorders}
         showRoute={showRoute}
-        routePlaceIds={ROUTE_PLACE_IDS}
+        routePlaceIds={activeRoutePlaceIds}
       />
 
       <PlaceModal
