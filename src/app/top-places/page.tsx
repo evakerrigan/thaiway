@@ -7,7 +7,7 @@ export default function TopPlacesPage() {
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 mb-3">11 лучших мест</h1>
           <p className="text-lg text-gray-600 max-w-2xl">
-            Самые интересные места для посещения в Таиланде — подборка для путешествия на север.
+            Самые интересные места для посещения в Таиланде.
           </p>
         </div>
       </div>

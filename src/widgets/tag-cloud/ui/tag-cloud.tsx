@@ -14,6 +14,7 @@ const TAGS: Tag[] = [
   { id: 'museums', label: 'Музеи', hasData: false, emoji: '🏛️' },
   { id: 'cafes', label: 'Кафе', hasData: false, emoji: '☕' },
   { id: 'attractions', label: 'Достопримечательности', hasData: false, emoji: '📍' },
+  { id: 'hotels', label: 'Отели', hasData: false, emoji: '🏨' },
 ];
 
 interface TagCloudProps {
