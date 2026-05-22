@@ -1,12 +1,12 @@
 export const ROUTES = {
   HOME: '/',
-  PAGE_2: '/page-2',
-  PAGE_3: '/page-3',
+  CALCULATOR: '/calculator',
+  TOP_PLACES: '/top-places',
 } as const;
 
 export const NAV_ITEMS = [
   { label: 'Главная', href: ROUTES.HOME },
-  { label: 'Калькулятор', href: ROUTES.PAGE_2 },
-  { label: 'Топ 11 мест', href: ROUTES.PAGE_3 },
+  { label: 'Калькулятор', href: ROUTES.CALCULATOR },
+  { label: '11 лучших мест', href: ROUTES.TOP_PLACES },
 ] as const;
 
