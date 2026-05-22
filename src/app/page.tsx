@@ -57,28 +57,27 @@ export default function Home() {
   ];
 
   return (
-    <Container className="py-8">
-      <div className="flex flex-col items-center gap-6">
-        <TagCloud activeTags={activeTags} onTagToggle={handleTagToggle} />
-
-        <div className="mt-2">
-          <YandexMap
-            width={1000}
-            height={1000}
-            places={visiblePlaces}
-            onPlaceClick={handlePlaceClick}
-            showBorders={showBorders}
-            showRoute={showRoute}
-            routePlaceIds={ROUTE_PLACE_IDS}
-          />
+    <div className="flex flex-col flex-1 min-h-0">
+      <Container className="py-8 shrink-0">
+        <div className="flex flex-col items-center gap-6">
+          <TagCloud activeTags={activeTags} onTagToggle={handleTagToggle} />
         </div>
-      </div>
+      </Container>
+
+      <YandexMap
+        className="flex-1 min-h-[400px]"
+        places={visiblePlaces}
+        onPlaceClick={handlePlaceClick}
+        showBorders={showBorders}
+        showRoute={showRoute}
+        routePlaceIds={ROUTE_PLACE_IDS}
+      />
 
       <PlaceModal
         place={selectedPlace}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
       />
-    </Container>
+    </div>
   );
 }

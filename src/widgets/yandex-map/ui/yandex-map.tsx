@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { THAILAND_CENTER, THAILAND_ZOOM, YANDEX_MAPS_CONFIG } from '@/shared/api';
 import { Place } from '@/shared/types';
 
@@ -14,6 +14,7 @@ declare global {
 interface YandexMapProps {
   width?: number;
   height?: number;
+  className?: string;
   places?: Place[];
   onPlaceClick?: (place: Place) => void;
   showBorders?: boolean;
@@ -34,8 +35,9 @@ interface YandexMapProps {
 }
 
 export const YandexMap = ({
-  width = 1000,
-  height = 1000,
+  width,
+  height,
+  className = '',
   places = [],
   onPlaceClick,
   showBorders = false,
@@ -203,11 +205,30 @@ export const YandexMap = ({
     });
   }, [places, onPlaceClick, routePlaceIds, isMapReady]);
 
+  // ── Resize (full-width layout) ────────────────────────────────────────────
+  useEffect(() => {
+    if (!isMapReady || !mapRef.current || !mapInstanceRef.current) return;
+
+    const map = mapInstanceRef.current;
+    const fit = () => map.container?.fitToViewport?.();
+
+    const observer = new ResizeObserver(fit);
+    observer.observe(mapRef.current);
+    fit();
+
+    return () => observer.disconnect();
+  }, [isMapReady]);
+
+  const sizeStyle: CSSProperties = {
+    width: width !== undefined ? `${width}px` : '100%',
+    ...(height !== undefined && { height: `${height}px` }),
+  };
+
   return (
     <div
       ref={mapRef}
-      style={{ width: `${width}px`, height: `${height}px` }}
-      className="rounded-lg shadow-lg"
+      style={sizeStyle}
+      className={`h-full ${className}`.trim()}
     />
   );
 };

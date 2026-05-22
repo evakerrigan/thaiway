@@ -24,7 +24,7 @@ interface TagCloudProps {
 export const TagCloud = ({ activeTags, onTagToggle }: TagCloudProps) => {
   return (
     <div className="w-full">
-      <div className="flex flex-wrap gap-2 justify-center">
+      <div className="flex flex-wrap gap-1.5 justify-center">
         {TAGS.map((tag) => {
           const isSelected = activeTags.includes(tag.id);
           const isAvailable = tag.hasData;
@@ -36,20 +36,20 @@ export const TagCloud = ({ activeTags, onTagToggle }: TagCloudProps) => {
               disabled={!isAvailable}
               title={!isAvailable ? 'Данные появятся позже' : undefined}
               className={`
-                inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium
+                inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium
                 transition-all duration-200 select-none
                 ${isAvailable
                   ? isSelected
-                    ? 'bg-brand text-white shadow-md hover:bg-brand-hover active:scale-95'
-                    : 'bg-white text-teal-700 border-2 border-brand hover:bg-teal-50 active:scale-95'
-                  : 'bg-gray-100 text-gray-400 border-2 border-gray-200 cursor-not-allowed opacity-60'
+                    ? 'bg-brand text-white shadow-sm hover:bg-brand-hover active:scale-95'
+                    : 'bg-white text-teal-700 border border-brand hover:bg-teal-50 active:scale-95'
+                  : 'bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed opacity-60'
                 }
               `}
             >
               <span>{tag.emoji}</span>
               <span>{tag.label}</span>
               {!isAvailable && (
-                <span className="text-xs opacity-70 ml-0.5">· скоро</span>
+                <span className="text-[10px] opacity-70 ml-0.5">· скоро</span>
               )}
             </button>
           );

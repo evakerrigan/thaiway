@@ -20,8 +20,11 @@ export const Header = () => {
                   <Link
                     href={item.href}
                     className={`
-                      text-base font-medium transition-colors hover:text-white
-                      ${isActive ? 'text-white font-semibold' : 'text-teal-900'}
+                      text-base font-medium text-white transition-opacity
+                      ${isActive
+                        ? 'underline underline-offset-4 decoration-2 font-semibold'
+                        : 'hover:opacity-80'
+                      }
                     `}
                   >
                     {item.label}
