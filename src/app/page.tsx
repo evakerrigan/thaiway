@@ -4,14 +4,27 @@ import { useState } from 'react';
 import { Container } from '@/shared/ui/container';
 import { YandexMap } from '@/widgets/yandex-map';
 import { PlaceModal } from '@/widgets/place-modal';
-import { WeatherWidget } from '@/widgets/weather-widget';
-import { Calculator } from '@/widgets/calculator';
+import { TagCloud } from '@/widgets/tag-cloud';
 import { PLACES } from '@/shared/data';
 import { Place } from '@/shared/types';
+
+const ROUTE_PLACE_IDS = [
+  'bangkok',
+  'phitsanulok',
+  'ayutthaya',
+  'lopburi',
+  'nakhonsawan',
+  'chiangrai',
+  'chiangmai',
+  'mae-ya-waterfall',
+];
+
+const INITIAL_ACTIVE_TAGS = ['thailand', 'north-trip', 'top-places'];
 
 export default function Home() {
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeTags, setActiveTags] = useState<string[]>(INITIAL_ACTIVE_TAGS);
 
   const handlePlaceClick = (place: Place) => {
     setSelectedPlace(place);
@@ -20,45 +33,43 @@ export default function Home() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    // Небольшая задержка перед очисткой данных для плавной анимации
     setTimeout(() => {
       setSelectedPlace(null);
     }, 300);
   };
 
-  return (
-    <Container className="py-12">
-      <div className="flex flex-col items-center gap-8">
-        <h1 className="text-4xl font-bold text-gray-900">Главная</h1>
-        
-        {/* Калькулятор (2/3) и Погода (1/3) в одну строку */}
-        <div className="w-full flex gap-6">
-          <div className="flex-[2]">
-            <Calculator />
-          </div>
-          <div className="flex-[1]">
-            <WeatherWidget />
-          </div>
-        </div>
+  const handleTagToggle = (tagId: string) => {
+    setActiveTags((prev) =>
+      prev.includes(tagId) ? prev.filter((t) => t !== tagId) : [...prev, tagId]
+    );
+  };
 
-        <div className="mt-8">
-          <YandexMap 
-            width={1000} 
-            height={1000} 
-            places={PLACES}
+  const showBorders = activeTags.includes('thailand');
+  const showRoute = activeTags.includes('north-trip');
+
+  // Маркеры маршрута принадлежат тегу "north-trip", остальные — тегу "top-places"
+  const routePlaces = PLACES.filter((p) => ROUTE_PLACE_IDS.includes(p.id));
+  const otherPlaces = PLACES.filter((p) => !ROUTE_PLACE_IDS.includes(p.id));
+
+  const visiblePlaces = [
+    ...(activeTags.includes('north-trip') ? routePlaces : []),
+    ...(activeTags.includes('top-places') ? otherPlaces : []),
+  ];
+
+  return (
+    <Container className="py-8">
+      <div className="flex flex-col items-center gap-6">
+        <TagCloud activeTags={activeTags} onTagToggle={handleTagToggle} />
+
+        <div className="mt-2">
+          <YandexMap
+            width={1000}
+            height={1000}
+            places={visiblePlaces}
             onPlaceClick={handlePlaceClick}
-            showBorders={true}
-            showRoute={true}
-            routePlaceIds={[
-              'bangkok',
-              'phitsanulok',
-              'ayutthaya',
-              'lopburi',
-              'nakhonsawan',
-              'chiangrai',
-              'chiangmai',
-              'mae-ya-waterfall',
-            ]}
+            showBorders={showBorders}
+            showRoute={showRoute}
+            routePlaceIds={ROUTE_PLACE_IDS}
           />
         </div>
       </div>
