@@ -1,1 +1,1 @@
-export type { Place, PlaceId, MediaItem } from './place';
+export type { Place, PlaceId, PlaceCategory, MediaItem } from './place';

@@ -1,6 +1,14 @@
 export { PLACES, ROUTE_PLACES, getPlaceById, getPlacesByCategory } from './places';
 export { TOP_PLACES, TOP_PLACE_IDS } from './top-places';
 export {
+  MAP_LAYERS,
+  DEFAULT_ACTIVE_LAYERS,
+  COMING_SOON_LAYERS,
+  ROUTE_PLACE_IDS,
+  type LayerId,
+  type MapLayer,
+} from './layers';
+export {
   THAILAND_BORDER_COORDINATES,
   BORDER_STYLE,
   BORDER_STYLE_BLUE,

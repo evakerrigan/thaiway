@@ -5,6 +5,8 @@ export interface MediaItem {
   poster?: string;
 }
 
+export type PlaceCategory = 'city' | 'island' | 'beach' | 'temple' | 'other';
+
 export interface Place {
   id: string;
   name: string;
@@ -14,7 +16,9 @@ export interface Place {
   };
   description: string;
   image?: string;
-  category?: 'city' | 'island' | 'beach' | 'temple' | 'other';
+  category?: PlaceCategory;
+  /** Провинция или регион — показывается в чипах карточки. */
+  province?: string;
   /** Ранг в списке «11 лучших мест». 1 — лучшее. Если задан — место отображается на странице /top-places. */
   rank?: number;
   /** Развёрнутое описание для статьи на /top-places. */

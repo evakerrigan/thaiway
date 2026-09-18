@@ -1,22 +1,60 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Golos_Text, Unbounded } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/widgets/header";
 import { LayoutFooter } from "@/widgets/footer";
+import { BottomNav } from "@/widgets/bottom-nav";
+import { SITE, SITE_URL } from "@/shared/config";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const golos = Golos_Text({
+  variable: "--font-golos",
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const unbounded = Unbounded({
+  variable: "--font-unbounded",
+  subsets: ["latin", "cyrillic"],
+  weight: ["600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "ThaiWay - Путеводитель по Таиланду",
-  description: "Ваш путеводитель по Таиланду",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE.title,
+    template: `%s — ${SITE.name}`,
+  },
+  description: SITE.description,
+  applicationName: SITE.name,
+  keywords: [
+    "Таиланд",
+    "путеводитель",
+    "карта Таиланда",
+    "маршрут на север Таиланда",
+    "лучшие места Таиланда",
+    "стоимость поездки в Таиланд",
+  ],
+  // Картинки для превью подхватываются автоматически из opengraph-image.tsx
+  // в корне и в сегментах /top-places и /calculator.
+  openGraph: {
+    type: "website",
+    siteName: SITE.name,
+    locale: SITE.locale,
+    url: "/",
+    title: SITE.title,
+    description: SITE.description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE.title,
+    description: SITE.description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
@@ -27,13 +65,12 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+        className={`${golos.variable} ${unbounded.variable} flex min-h-screen flex-col antialiased`}
       >
         <Header />
-        <main className="flex-1 flex flex-col min-h-0">
-          {children}
-        </main>
+        <main className="flex min-h-0 flex-1 flex-col">{children}</main>
         <LayoutFooter />
+        <BottomNav />
       </body>
     </html>
   );

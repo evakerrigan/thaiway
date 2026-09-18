@@ -26,6 +26,8 @@ interface YandexMapInstance {
     bounds: number[][],
     options?: { checkZoomRange?: boolean; zoomMargin?: number }
   ): void;
+  setCenter(center: number[], zoom?: number, options?: { duration?: number }): void;
+  getZoom(): number;
   container?: YandexMapContainer;
 }
 
@@ -59,6 +61,19 @@ declare global {
   }
 }
 
+/** Цвета маркеров совпадают с легендой слоёв на главной. */
+export const MARKER_COLORS = {
+  route: '#0b7f79',
+  top: '#d9962b',
+  selected: '#10272a',
+} as const;
+
+export interface MapFocus {
+  lat: number;
+  lng: number;
+  zoom?: number;
+}
+
 interface YandexMapProps {
   width?: number;
   height?: number;
@@ -80,6 +95,10 @@ interface YandexMapProps {
     strokeWidth: number;
   };
   routePlaceIds?: string[];
+  /** Выделенное место — маркер становится тёмным и поднимается наверх. */
+  selectedPlaceId?: string | null;
+  /** Куда плавно переместить карту. Новый объект — новое перемещение. */
+  focus?: MapFocus | null;
   /** Центр карты по умолчанию. */
   center?: { lat: number; lng: number };
   /** Зум карты по умолчанию. */
@@ -99,6 +118,8 @@ export const YandexMap = ({
   showRoute = false,
   routeStyle,
   routePlaceIds = [],
+  selectedPlaceId = null,
+  focus = null,
   center,
   zoom,
   fitToPlaces = false,
@@ -182,6 +203,7 @@ export const YandexMap = ({
               strokeWidth: style.strokeWidth,
               fillColor: style.fillColor,
               fillOpacity: style.fillOpacity,
+              interactivityModel: 'default#transparent',
             }
           );
           if (borderPolygonRef.current) {
@@ -239,27 +261,30 @@ export const YandexMap = ({
     placemarksRef.current = [];
 
     places.forEach((place) => {
-      const isRoutePlaceId = routePlaceIds.includes(place.id);
+      const isRoutePlace = routePlaceIds.includes(place.id);
       const hasRank = typeof place.rank === 'number';
+      const isSelected = place.id === selectedPlaceId;
 
-      let preset = getMarkerPreset(place.category);
-      let iconColor: string | undefined = getMarkerColor(place.category);
       const properties: Record<string, unknown> = {
-        balloonContent: place.name,
         hintContent: place.name,
       };
+      const options: Record<string, unknown> = {
+        hideIconOnBalloonOpen: false,
+        zIndex: isSelected ? 1000 : hasRank ? 500 : 100,
+      };
 
-      if (isRoutePlaceId) {
-        preset = 'islands#circleDotIcon';
-        iconColor = '#00CED1';
-      } else if (hasRank) {
-        preset = 'islands#violetStretchyIcon';
-        iconColor = undefined;
+      if (hasRank) {
+        // Золотой кружок с номером — как в рейтинге «11 мест»
+        options.preset = 'islands#circleIcon';
+        options.iconColor = isSelected ? MARKER_COLORS.selected : MARKER_COLORS.top;
         properties.iconContent = String(place.rank);
+      } else if (isRoutePlace) {
+        options.preset = 'islands#circleDotIcon';
+        options.iconColor = isSelected ? MARKER_COLORS.selected : MARKER_COLORS.route;
+      } else {
+        options.preset = 'islands#circleDotIcon';
+        options.iconColor = isSelected ? MARKER_COLORS.selected : getMarkerColor(place.category);
       }
-
-      const options: Record<string, unknown> = { preset };
-      if (iconColor !== undefined) options.iconColor = iconColor;
 
       const placemark = new window.ymaps.Placemark(
         [place.coordinates.lat, place.coordinates.lng],
@@ -289,7 +314,15 @@ export const YandexMap = ({
         zoomMargin: 40,
       });
     }
-  }, [places, onPlaceClick, routePlaceIds, isMapReady, fitToPlaces]);
+  }, [places, onPlaceClick, routePlaceIds, selectedPlaceId, isMapReady, fitToPlaces]);
+
+  // Плавный перелёт к выбранному месту
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!isMapReady || !map || !focus) return;
+    const targetZoom = focus.zoom ?? Math.max(map.getZoom(), 9);
+    map.setCenter([focus.lat, focus.lng], targetZoom, { duration: 400 });
+  }, [focus, isMapReady]);
 
   useEffect(() => {
     if (!isMapReady || !mapRef.current || !mapInstanceRef.current) return;
@@ -310,32 +343,32 @@ export const YandexMap = ({
   };
 
   return (
-    <div
-      ref={mapRef}
-      style={sizeStyle}
-      className={`h-full ${className}`.trim()}
-    />
+    <div className={`relative flex h-full flex-col ${className}`.trim()} style={sizeStyle}>
+      {/* flex-1 вместо h-full: у flex-родителя высота может быть неопределённой, и 100% схлопнулись бы в ноль */}
+      <div ref={mapRef} className="min-h-0 w-full flex-1" />
+      {!isMapReady && (
+        <div
+          className="absolute inset-0 grid place-items-center bg-surface-2"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="flex items-center gap-3 rounded-full bg-surface px-4 py-2 text-sm font-semibold text-fg-2 shadow-card">
+            <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-brand-bright" />
+            Загружаем карту…
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
-function getMarkerPreset(category?: Place['category']): string {
-  const presets: Record<NonNullable<Place['category']>, string> = {
-    city: 'islands#redIcon',
-    island: 'islands#blueIcon',
-    beach: 'islands#lightBlueIcon',
-    temple: 'islands#violetIcon',
-    other: 'islands#grayIcon',
-  };
-  return category ? presets[category] : 'islands#redIcon';
-}
-
 function getMarkerColor(category?: Place['category']): string {
   const colors: Record<NonNullable<Place['category']>, string> = {
-    city: '#FF0000',
-    island: '#1E98FF',
-    beach: '#56CCF2',
-    temple: '#9C27B0',
+    city: MARKER_COLORS.route,
+    island: '#1e98ff',
+    beach: '#56ccf2',
+    temple: '#9c27b0',
     other: '#757575',
   };
-  return category ? colors[category] : '#FF0000';
+  return category ? colors[category] : MARKER_COLORS.route;
 }

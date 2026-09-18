@@ -56,8 +56,8 @@ export const TRAVEL_ROUTE_COORDINATES = [
  * Стиль линии маршрута (циан)
  */
 export const ROUTE_STYLE = {
-  strokeColor: '#00CED1', // Циан (DarkTurquoise)
-  strokeOpacity: 0.9,
+  strokeColor: '#0b7f79', // Бирюза бренда
+  strokeOpacity: 0.85,
   strokeWidth: 4,
 } as const;
 

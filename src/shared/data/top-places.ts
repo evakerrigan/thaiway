@@ -8,6 +8,7 @@ export const TOP_PLACES: Place[] = [
   {
     id: 'wat-pha-sorn-kaew',
     rank: 1,
+    province: 'Пхетчабун',
     name: 'Храм Wat Pha Sorn Kaew',
     coordinates: { lat: 16.790141, lng: 101.0509634 },
     category: 'temple',
@@ -33,6 +34,7 @@ export const TOP_PLACES: Place[] = [
   {
     id: 'mae-ya-waterfall',
     rank: 2,
+    province: 'Чиангмай',
     name: 'Водопад Mae Ya',
     coordinates: { lat: 18.443903, lng: 98.611788 },
     category: 'other',
@@ -48,6 +50,7 @@ export const TOP_PLACES: Place[] = [
   {
     id: 'doi-inthanon',
     rank: 3,
+    province: 'Чиангмай',
     name: 'Дой Интанон',
     coordinates: { lat: 18.58849, lng: 98.487061 },
     category: 'other',
@@ -64,6 +67,7 @@ export const TOP_PLACES: Place[] = [
   {
     id: 'lalitta-cafe',
     rank: 4,
+    province: 'Чиангмай',
     name: 'Кафе Lalitta',
     coordinates: { lat: 19.9424463, lng: 99.8115731 },
     category: 'other',
@@ -82,6 +86,7 @@ export const TOP_PLACES: Place[] = [
   {
     id: 'wat-rong-khun',
     rank: 5,
+    province: 'Чианграй',
     name: 'Белый храм Ват Ронг Кхун',
     coordinates: { lat: 19.823469, lng: 99.762666 },
     category: 'temple',
@@ -100,6 +105,7 @@ export const TOP_PLACES: Place[] = [
   {
     id: 'tiger-cave-temple',
     rank: 6,
+    province: 'Краби',
     name: 'Закат на Пагоде пещеры Тигра',
     coordinates: { lat: 8.128054, lng: 98.922938 },
     category: 'temple',
@@ -117,6 +123,7 @@ export const TOP_PLACES: Place[] = [
   {
     id: 'railay-princess-lagoon',
     rank: 7,
+    province: 'Краби',
     name: 'Остров Рейли и Лагуна Принцессы',
     coordinates: { lat: 8.004857, lng: 98.842463 },
     category: 'beach',
@@ -139,6 +146,7 @@ export const TOP_PLACES: Place[] = [
   {
     id: 'similan-islands',
     rank: 8,
+    province: 'Пхангнга',
     name: 'Заповедник Симиланы',
     coordinates: { lat: 8.668039, lng: 97.648393 },
     category: 'island',
@@ -160,6 +168,7 @@ export const TOP_PLACES: Place[] = [
   {
     id: 'bangkok-skyscrapers',
     rank: 9,
+    province: 'Бангкок',
     name: 'Небоскрёбы Бангкока',
     coordinates: { lat: 13.7236, lng: 100.5277 },
     category: 'city',
@@ -180,6 +189,7 @@ export const TOP_PLACES: Place[] = [
   {
     id: 'angkor-wat',
     rank: 10,
+    province: 'Сиемреап, Камбоджа',
     name: 'Ангкор Ват (Камбоджа)',
     coordinates: { lat: 13.413746, lng: 103.866548 },
     category: 'temple',
@@ -200,6 +210,7 @@ export const TOP_PLACES: Place[] = [
   {
     id: 'pasaan',
     rank: 11,
+    province: 'Накхонсаван',
     name: 'Pasaan — исток реки Чао Прайя',
     coordinates: { lat: 15.701678, lng: 100.142588 },
     category: 'other',

@@ -1,28 +1,132 @@
 @import "tailwindcss";
 
+/*
+  Дизайн-токены ThaiWay.
+  Бирюза (#0B7F79 / #12D3C8) — бренд и акценты, золото — номера рейтинга «11 мест».
+  Тёмная тема подключается по prefers-color-scheme, компоненты используют только токены.
+*/
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --brand: #00CED1;
-  --brand-hover: #00b5b8;
+  color-scheme: light;
+  --bg: #f3f5f2;
+  --surface: #ffffff;
+  --surface-2: #e9efed;
+  --fg: #10272a;
+  --fg-2: #3e5457;
+  --muted: #6d8386;
+  --line: #d5e0dd;
+  --brand: #0b7f79;
+  --brand-hover: #096b66;
+  --brand-bright: #12d3c8;
+  --brand-soft: #d8f4f1;
+  --accent: #0b7f79;
+  --gold: #d9962b;
+  --gold-soft: #fbecd2;
+  --plate: #10272a;
+  --plate-fg: #f2fbfa;
+  --shadow-card: 0 1px 2px rgba(16, 39, 42, 0.06), 0 12px 32px -18px rgba(16, 39, 42, 0.25);
 }
 
-[data-theme="dark"] {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #0c1c1e;
+    --surface: #132a2d;
+    --surface-2: #1a3538;
+    --fg: #e8f2f0;
+    --fg-2: #b7cbc8;
+    --muted: #85a09d;
+    --line: #25464a;
+    --brand-soft: #12403f;
+    --accent: #33cfc4;
+    --gold: #e8ab4a;
+    --gold-soft: #3f3118;
+    --plate: #071618;
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px -18px rgba(0, 0, 0, 0.6);
+  }
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-fg-2: var(--fg-2);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
   --color-brand: var(--brand);
   --color-brand-hover: var(--brand-hover);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-brand-bright: var(--brand-bright);
+  --color-brand-soft: var(--brand-soft);
+  --color-accent: var(--accent);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-plate: var(--plate);
+  --color-plate-fg: var(--plate-fg);
+  --shadow-card: var(--shadow-card);
+  --font-sans: var(--font-golos), "Segoe UI", system-ui, sans-serif;
+  --font-display: var(--font-unbounded), var(--font-golos), system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  /* Переменные шрифтов задаёт next/font на body, поэтому ссылаемся на них напрямую */
+  font-family: var(--font-golos), "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-unbounded), var(--font-golos), system-ui, sans-serif;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand-bright);
+  outline-offset: 2px;
+}
+
+/* Появление модалок и шторок */
+@keyframes tw-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes tw-slide-up {
+  from { transform: translateY(24px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes tw-slide-left {
+  from { transform: translateX(32px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.tw-fade-in { animation: tw-fade-in 0.2s ease-out both; }
+.tw-slide-up { animation: tw-slide-up 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.tw-slide-left { animation: tw-slide-left 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tw-fade-in,
+  .tw-slide-up,
+  .tw-slide-left {
+    animation: none;
+  }
+}
+
+/* Скрыть скроллбар у горизонтальных лент чипов */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
