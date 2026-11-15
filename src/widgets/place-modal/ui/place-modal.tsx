@@ -42,9 +42,10 @@ export const PlaceModal = ({ place, isOpen, onClose }: PlaceModalProps) => {
           </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-dashed border-line pt-6">
-            {hasRank && (
+            {/* Ссылка на полную карточку: место из топа — на /top-places, кафе — на /cafes */}
+            {(hasRank || place.category === 'cafe') && (
               <Link
-                href={`${ROUTES.TOP_PLACES}#place-${place.id}`}
+                href={`${hasRank ? ROUTES.TOP_PLACES : ROUTES.CAFES}#place-${place.id}`}
                 onClick={onClose}
                 className="inline-flex items-center gap-2 rounded-full bg-terracotta px-5 py-3 font-bold text-white transition-colors hover:bg-terracotta-hover"
               >

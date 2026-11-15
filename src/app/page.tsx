@@ -44,15 +44,19 @@ export default function Home() {
   const showBorders = activeTags.includes('thailand');
   const showNorthTrip = activeTags.includes('north-trip');
   const showTopPlaces = activeTags.includes('top-places');
+  const showCafes = activeTags.includes('cafes');
 
   // Маркер видим, если активен соответствующий тег.
   // Mae-Ya принадлежит и маршруту, и топ-местам — поэтому появится при любом из них.
-  const visiblePlaces = PLACES.filter((p) => {
+  const visiblePlaces = PLACES.flatMap((p) => {
     const isRoute = ROUTE_PLACE_IDS.includes(p.id);
     const isTop = typeof p.rank === 'number';
-    if (showNorthTrip && isRoute) return true;
-    if (showTopPlaces && isTop) return true;
-    return false;
+    const isCafe = p.category === 'cafe';
+    if (showNorthTrip && isRoute) return [p];
+    if (showTopPlaces && isTop) return [p];
+    // Кафе из топа (Lalitta) при выключенном слое «11 лучших мест» рисуем как кафе, без номера.
+    if (showCafes && isCafe) return [{ ...p, rank: undefined }];
+    return [];
   });
 
   // Для приоритета стиля route над top-places: passing routePlaceIds только если north-trip активен.
@@ -71,8 +75,8 @@ export default function Home() {
               Карта моих путешествий
             </h2>
             <p className="m-0 text-[17px] leading-relaxed text-ink-soft">
-              Включайте слои, как страницы дневника: границы страны, дорогу на север или только лучшие
-              места. Нажмите на точку — откроется рассказ с фото.
+              Включайте слои, как страницы дневника: границы страны, дорогу на север, лучшие места или
+              кафе. Нажмите на точку — откроется рассказ с фото.
             </p>
             <TagCloud activeTags={activeTags} onTagToggle={handleTagToggle} />
             <ul className="mt-2 flex flex-col gap-2.5 text-[15px] text-ink-soft">
@@ -83,6 +87,10 @@ export default function Home() {
               <li className="flex items-center gap-2.5">
                 <span aria-hidden className="w-[22px] border-t-[2.5px] border-dashed border-terracotta" />
                 дорога на север на машине
+              </li>
+              <li className="flex items-center gap-2.5">
+                <span aria-hidden className="h-[14px] w-[14px] rounded-full bg-[#8A5A12] ring-4 ring-[#8A5A12]/25" />
+                кафе
               </li>
             </ul>
           </div>

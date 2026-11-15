@@ -17,8 +17,9 @@ const TAGS: Tag[] = [
     activeClass: 'bg-terracotta text-white border-terracotta',
   },
   { id: 'top-places', label: '11 лучших мест', hasData: true, activeClass: 'bg-jade text-white border-jade' },
+  // Цвет совпадает с метками кафе на карте
+  { id: 'cafes', label: 'Кафе', hasData: true, activeClass: 'bg-[#8A5A12] text-white border-[#8A5A12]' },
   { id: 'museums', label: 'Музеи', hasData: false },
-  { id: 'cafes', label: 'Кафе', hasData: false },
   { id: 'attractions', label: 'Достопримечательности', hasData: false },
   { id: 'hotels', label: 'Отели', hasData: false },
 ];
