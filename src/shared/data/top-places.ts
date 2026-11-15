@@ -128,19 +128,17 @@ export const TOP_PLACES: Place[] = [
     coordinates: { lat: 8.004857, lng: 98.842463 },
     category: 'beach',
     googleMapsUrl: 'https://maps.app.goo.gl/wtB5ZSAwhxWMSsWP6',
-    image: '/top-places/raily1.jpg',
+    image: '/top-places/railay-beach.jpg',
     description:
       'Полуостров Рейли с нависающими над пляжем скалами и труднодоступной Лагуной Принцессы.',
     fullDescription:
       'Остров Рейли с его нависающими над пляжем скалами и труднодоступной Лагуной Принцессы — рай для любителей приключений. Именно лагуна, а не пещера: пещера Принцессы там тоже есть, но её — гугли сам. Маршрут к лагуне требует немного скалолазной решимости, зато виды награждают сполна.',
     media: [
-      { type: 'image', src: '/top-places/raily1.jpg', alt: 'Рейли 1' },
-      { type: 'image', src: '/top-places/raily2.jpg', alt: 'Рейли 2' },
-      { type: 'image', src: '/top-places/raily3.jpg', alt: 'Рейли 3' },
-      { type: 'image', src: '/top-places/raily4.jpg', alt: 'Рейли 4' },
-      { type: 'image', src: '/top-places/raily5.jpg', alt: 'Рейли 5' },
-      { type: 'image', src: '/top-places/raily6.jpg', alt: 'Рейли 6' },
-      { type: 'image', src: '/top-places/raily7.jpg', alt: 'Рейли 7' },
+      // Первое фото — обложка места (карточки, окно на карте).
+      { type: 'image', src: '/top-places/railay-beach.jpg', alt: 'Пляж под скалами на Рейли' },
+      { type: 'image', src: '/top-places/railay-monkey.jpg', alt: 'Обезьянка в зелени на Рейли' },
+      { type: 'image', src: '/top-places/railay-cliff.jpg', alt: 'Нависающая скала над водой, Рейли' },
+      { type: 'image', src: '/top-places/railay-rocks.jpg', alt: 'Скалы-сталактиты над тропой, Рейли' },
     ],
   },
   {

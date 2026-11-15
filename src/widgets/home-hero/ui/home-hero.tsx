@@ -52,8 +52,8 @@ export const HomeHero = () => {
         <Polaroid tilt={4} caption="Рейли, Краби" className="absolute top-0 right-0 w-[46%]">
           <div className="relative h-[150px] sm:h-[220px]">
             <Image
-              src="/top-places/raily3.jpg"
-              alt="Скалы полуострова Рейли"
+              src="/top-places/railay-beach.jpg"
+              alt="Пляж под скалами на Рейли"
               fill
               sizes="(max-width: 768px) 45vw, 280px"
               className="object-cover"
