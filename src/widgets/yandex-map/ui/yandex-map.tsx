@@ -88,6 +88,11 @@ interface YandexMapProps {
   zoom?: number;
   /** Подогнать видимую область, чтобы все маркеры поместились. */
   fitToPlaces?: boolean;
+  /**
+   * Единый вид для всех меток (например, на карте кафе). Если задан —
+   * перекрывает стили маршрута/топа и не выводит номер места на метке.
+   */
+  markerStyle?: { preset: string; iconColor?: string };
 }
 
 export const YandexMap = ({
@@ -104,6 +109,7 @@ export const YandexMap = ({
   center,
   zoom,
   fitToPlaces = false,
+  markerStyle,
 }: YandexMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<YandexMapInstance | null>(null);
@@ -116,6 +122,8 @@ export const YandexMap = ({
   borderStyleRef.current = borderStyle;
   const routeStyleRef = useRef(routeStyle);
   routeStyleRef.current = routeStyle;
+  const markerStyleRef = useRef(markerStyle);
+  markerStyleRef.current = markerStyle;
 
   const [isMapReady, setIsMapReady] = useState(false);
 
@@ -254,7 +262,11 @@ export const YandexMap = ({
         hintContent: place.name,
       };
 
-      if (isRoutePlaceId) {
+      const uniformStyle = markerStyleRef.current;
+      if (uniformStyle) {
+        preset = uniformStyle.preset;
+        iconColor = uniformStyle.iconColor;
+      } else if (isRoutePlaceId) {
         preset = 'islands#circleDotIcon';
         iconColor = MARKER_COLORS.route;
       } else if (hasRank) {

@@ -1,14 +1,14 @@
 /**
  * Общие данные сайта для SEO и превью ссылок.
  *
- * Адрес сайта: задайте NEXT_PUBLIC_SITE_URL (например, https://thaiway.ru) в .env или в настройках хостинга.
- * Без неё на Vercel берётся основной домен проекта, локально — http://localhost:3000.
+ * Адрес сайта — https://thaiway.vercel.app. Если появится свой домен, задайте
+ * NEXT_PUBLIC_SITE_URL (например, https://thaiway.ru) в настройках Vercel или поменяйте значение ниже.
  * Адрес нужен, чтобы ссылки на картинку превью были полными — иначе мессенджеры её не покажут.
  */
+const DEFAULT_SITE_URL = 'https://thaiway.vercel.app';
+
 function resolveSiteUrl(): string {
-  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
-  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
-  return 'http://localhost:3000';
+  return process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL;
 }
 
 export const SITE = {
@@ -41,3 +41,27 @@ export const SITE = {
   ],
   locale: 'ru_RU',
 } as const;
+
+/**
+ * Картинка превью (src/app/opengraph-image.jpg). Её нужно явно указывать на страницах,
+ * которые задают свой openGraph: иначе Next.js не наследует картинку из корня.
+ */
+export const OG_IMAGE = {
+  url: '/opengraph-image.jpg',
+  width: 1200,
+  height: 630,
+  alt: 'Тайский путь — личный путеводитель по Таиланду: места, ради которых стоит лететь через полмира',
+} as const;
+
+/** openGraph для внутренней страницы: своё название/описание + общая картинка и данные сайта. */
+export function pageOpenGraph(title: string, description: string, url: string) {
+  return {
+    type: 'website' as const,
+    locale: SITE.locale,
+    siteName: SITE.name,
+    title,
+    description,
+    url,
+    images: [OG_IMAGE],
+  };
+}

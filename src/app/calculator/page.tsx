@@ -3,6 +3,7 @@ import { Container } from '@/shared/ui/container';
 import { HandNote } from '@/shared/ui/journal';
 import { Calculator } from '@/widgets/calculator';
 import { ROUTES } from '@/shared/config';
+import { pageOpenGraph } from '@/shared/config/site';
 
 const description =
   'Калькулятор стоимости поездки в Таиланд из Москвы: перелёт, жильё и еда для взрослых и детей на нужное число дней.';
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
   title: 'Калькулятор поездки в Таиланд',
   description,
   alternates: { canonical: ROUTES.CALCULATOR },
-  openGraph: { title: 'Калькулятор поездки в Таиланд', description, url: ROUTES.CALCULATOR },
+  openGraph: pageOpenGraph('Калькулятор поездки в Таиланд', description, ROUTES.CALCULATOR),
 };
 
 export default function CalculatorPage() {
