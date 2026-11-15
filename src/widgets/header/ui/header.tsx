@@ -32,7 +32,11 @@ export const Header = () => {
           </span>
         </Link>
 
-        <nav aria-label="Основное меню" className="-mx-2 max-w-full overflow-x-auto">
+        {/* На узких экранах меню листается вбок; полосу прокрутки прячем — она выглядела как серая линия */}
+        <nav
+          aria-label="Основное меню"
+          className="-mx-2 max-w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
           <ul className="flex gap-1 whitespace-nowrap px-2">
             {NAV_ITEMS.map((item) => {
               const isActive = pathname === item.href;

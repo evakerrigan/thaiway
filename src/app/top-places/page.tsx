@@ -50,10 +50,11 @@ export default function TopPlacesPage() {
         </nav>
       </Container>
 
+      {/* Карта по ширине контента: широкая полоса в бумажной рамке со скотчем */}
       <Container className="pb-14">
-        <section aria-label="Карта лучших мест" className="relative bg-paper-light p-3 shadow-polaroid">
+        <section aria-label="Карта лучших мест" className="relative w-full bg-paper-light p-3 shadow-polaroid">
           <Tape className="left-[42%] -rotate-3" />
-          <div className="h-[420px] sm:h-[520px]">
+          <div className="aspect-[2/1] max-h-[480px] min-h-[320px] w-full">
             <YandexMap places={sortedPlaces} onPlaceClick={handlePlaceClick} fitToPlaces />
           </div>
           <p className="m-0 px-2 pt-3 text-center font-hand text-2xl text-ink-soft">
