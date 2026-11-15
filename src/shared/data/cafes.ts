@@ -24,4 +24,19 @@ export const CAFES: Place[] = [
       { type: 'image', src: '/cafes/cat-cafe-persian.jpg', alt: 'Белый персидский кот сидит у окна' },
     ],
   },
+  {
+    id: 'vana-tara',
+    name: 'Vana Tara Cafe & Glamping',
+    region: 'По дороге Чиангмай — Чианграй',
+    category: 'cafe',
+    coordinates: { lat: 19.0151023, lng: 99.3002822 },
+    googleMapsUrl: 'https://maps.app.goo.gl/H5bsR2piRFoeZ5aVA',
+    description: 'Кафе и глэмпинг на горной реке по дороге из Чиангмая в Чианграй.',
+    media: [
+      // Обложкой станет фото (берётся первое изображение), видео идут в галерее первыми.
+      { type: 'video', src: '/cafes/vana-tara-1.mp4', alt: 'Vana Tara — видео 1' },
+      { type: 'video', src: '/cafes/vana-tara-2.mp4', alt: 'Vana Tara — видео 2' },
+      { type: 'image', src: '/cafes/vana-tara-river.jpg', alt: 'Горная река с камнями у кафе Vana Tara' },
+    ],
+  },
 ];
