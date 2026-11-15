@@ -39,4 +39,16 @@ export const CAFES: Place[] = [
       { type: 'image', src: '/cafes/vana-tara-river.jpg', alt: 'Горная река с камнями у кафе Vana Tara' },
     ],
   },
+  {
+    id: 'baan-langsuan',
+    name: 'Baan Langsuan',
+    region: 'Бангкок',
+    category: 'cafe',
+    coordinates: { lat: 13.7418412, lng: 100.5435946 },
+    googleMapsUrl: 'https://maps.app.goo.gl/tMFXW7PdXtwYNSJa8',
+    description: 'Очень милое, уютное и необычное кафе возле метро.',
+    media: [
+      { type: 'image', src: '/cafes/baan-langsuan.jpg', alt: 'Стена из картин в резных рамах и ваза с цветком лотоса в кафе Baan Langsuan' },
+    ],
+  },
 ];
