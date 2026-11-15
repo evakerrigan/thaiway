@@ -91,15 +91,17 @@ export const TOP_PLACES: Place[] = [
     coordinates: { lat: 19.823469, lng: 99.762666 },
     category: 'temple',
     googleMapsUrl: 'https://maps.app.goo.gl/NZVidKWNfih57m2s9',
-    image: '/top-places/rong-khun1.jpg',
+    image: '/top-places/white-temple-garden.jpg',
     description:
       'Один из самых необычных храмов мира — сказочно-белый комплекс с зеркальной мозаикой работы Чалермчая Коситпипата.',
     fullDescription:
       'Ват Ронг Кхун — один из самых необычных храмов мира, созданный художником Чалермчаем Коситпипатом. Сказочно-белый комплекс с зеркальной мозаикой, символическими скульптурами и яркой современной интерпретацией буддизма — здесь хочется ходить и рассматривать каждую деталь.',
     media: [
-      { type: 'image', src: '/top-places/rong-khun1.jpg', alt: 'Ват Ронг Кхун 1' },
-      { type: 'image', src: '/top-places/rong-khun2.jpg', alt: 'Ват Ронг Кхун 2' },
-      { type: 'image', src: '/top-places/rong-khun3.jpg', alt: 'Ват Ронг Кхун 3' },
+      // Первое фото — обложка места (карточки, окно на карте).
+      { type: 'image', src: '/top-places/white-temple-garden.jpg', alt: 'Белый храм на закате, вид из сада' },
+      { type: 'image', src: '/top-places/white-temple-pond.jpg', alt: 'Белый храм и пруд в лучах солнца' },
+      { type: 'image', src: '/top-places/white-temple-fence.jpg', alt: 'Белая резная ограда перед храмом' },
+      { type: 'image', src: '/top-places/white-temple-guardian.jpg', alt: 'Скульптура-страж на скамейке у Белого храма' },
     ],
   },
   {

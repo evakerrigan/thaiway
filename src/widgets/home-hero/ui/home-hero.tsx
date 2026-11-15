@@ -63,7 +63,7 @@ export const HomeHero = () => {
         <Polaroid tilt={-2} caption="Белый храм" className="absolute right-[6%] bottom-0 w-[44%]">
           <div className="relative h-[120px] sm:h-[180px]">
             <Image
-              src="/top-places/rong-khun2.jpg"
+              src="/top-places/white-temple-garden.jpg"
               alt="Белый храм Ват Ронг Кхун"
               fill
               sizes="(max-width: 768px) 45vw, 260px"
