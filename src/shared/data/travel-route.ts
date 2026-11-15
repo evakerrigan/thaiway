@@ -56,9 +56,10 @@ export const TRAVEL_ROUTE_COORDINATES = [
  * Стиль линии маршрута (циан)
  */
 export const ROUTE_STYLE = {
-  strokeColor: '#00CED1', // Циан (DarkTurquoise)
+  strokeColor: '#B8432A', // Терракота — цвет маршрута в дизайне «Дневник»
   strokeOpacity: 0.9,
   strokeWidth: 4,
+  strokeStyle: 'dash',
 } as const;
 
 /**
@@ -76,3 +77,15 @@ export const ROUTE_STYLE_TEAL = {
   strokeWidth: 4,
 } as const;
 
+
+/**
+ * Остановки маршрута «Путешествие на север на машине» — для ленты на главной.
+ */
+export const NORTH_TRIP_STOPS = [
+  { id: 'bangkok', label: 'Старт', name: 'Бангкок', note: 'Большой дворец и город, который никогда не спит' },
+  { id: 'ayutthaya', label: 'По пути', name: 'Аюттхая', note: 'Руины древней столицы Сиама' },
+  { id: 'lopburi', label: 'По пути', name: 'Лопбури', note: 'Кхмерские храмы и сотни обезьян' },
+  { id: 'phitsanulok', label: 'Остановка', name: 'Пхитсанулок', note: 'Будда Чиннарат и река Нан' },
+  { id: 'chiangmai', label: 'Север', name: 'Чиангмай', note: '300 храмов, ночные рынки, Дой Интанон' },
+  { id: 'chiangrai', label: 'Финиш', name: 'Чианграй', note: 'Белый храм и чайные плантации' },
+] as const;

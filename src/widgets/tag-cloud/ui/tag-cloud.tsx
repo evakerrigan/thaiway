@@ -4,18 +4,27 @@ interface Tag {
   id: string;
   label: string;
   hasData: boolean;
-  emoji: string;
+  /** Классы «наклейки», когда слой включён. */
+  activeClass?: string;
 }
 
 const TAGS: Tag[] = [
-  { id: 'thailand', label: 'Таиланд', hasData: true, emoji: '🇹🇭' },
-  { id: 'north-trip', label: 'Путешествие на север на машине', hasData: true, emoji: '🚗' },
-  { id: 'top-places', label: '11 лучших мест', hasData: true, emoji: '⭐' },
-  { id: 'museums', label: 'Музеи', hasData: false, emoji: '🏛️' },
-  { id: 'cafes', label: 'Кафе', hasData: false, emoji: '☕' },
-  { id: 'attractions', label: 'Достопримечательности', hasData: false, emoji: '📍' },
-  { id: 'hotels', label: 'Отели', hasData: false, emoji: '🏨' },
+  { id: 'thailand', label: 'Таиланд', hasData: true, activeClass: 'bg-ink text-paper border-ink' },
+  {
+    id: 'north-trip',
+    label: 'Путешествие на север на машине',
+    hasData: true,
+    activeClass: 'bg-terracotta text-white border-terracotta',
+  },
+  { id: 'top-places', label: '11 лучших мест', hasData: true, activeClass: 'bg-jade text-white border-jade' },
+  { id: 'museums', label: 'Музеи', hasData: false },
+  { id: 'cafes', label: 'Кафе', hasData: false },
+  { id: 'attractions', label: 'Достопримечательности', hasData: false },
+  { id: 'hotels', label: 'Отели', hasData: false },
 ];
+
+/** Лёгкий наклон, как у наклеек в дневнике. */
+const TILTS = [-1, 1, -1.5, 0.5, -0.5, 1.2, -1.2];
 
 interface TagCloudProps {
   activeTags: string[];
@@ -24,38 +33,41 @@ interface TagCloudProps {
 
 export const TagCloud = ({ activeTags, onTagToggle }: TagCloudProps) => {
   return (
-    <div className="w-full">
-      <div className="flex flex-wrap gap-1.5 justify-center">
-        {TAGS.map((tag) => {
-          const isSelected = activeTags.includes(tag.id);
-          const isAvailable = tag.hasData;
+    <div role="group" aria-label="Слои карты" className="flex flex-wrap gap-2.5">
+      {TAGS.map((tag, index) => {
+        const isSelected = activeTags.includes(tag.id);
+        const style = { transform: `rotate(${TILTS[index % TILTS.length]}deg)` };
 
+        if (!tag.hasData) {
           return (
             <button
               key={tag.id}
-              onClick={() => isAvailable && onTagToggle(tag.id)}
-              disabled={!isAvailable}
-              title={!isAvailable ? 'Данные появятся позже' : undefined}
-              className={`
-                inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium
-                transition-all duration-200 select-none
-                ${isAvailable
-                  ? isSelected
-                    ? 'bg-brand text-white shadow-sm hover:bg-brand-hover active:scale-95'
-                    : 'bg-white text-teal-700 border border-brand hover:bg-teal-50 active:scale-95'
-                  : 'bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed opacity-60'
-                }
-              `}
+              type="button"
+              disabled
+              title="Данные появятся позже"
+              style={style}
+              className="min-h-11 cursor-not-allowed border-[1.5px] border-dashed border-[#9C8E7B] bg-transparent px-4 py-2.5 text-sm font-semibold text-ink-muted"
             >
-              <span>{tag.emoji}</span>
-              <span>{tag.label}</span>
-              {!isAvailable && (
-                <span className="text-[10px] opacity-70 ml-0.5">· скоро</span>
-              )}
+              {tag.label} · скоро
             </button>
           );
-        })}
-      </div>
+        }
+
+        return (
+          <button
+            key={tag.id}
+            type="button"
+            aria-pressed={isSelected}
+            onClick={() => onTagToggle(tag.id)}
+            style={style}
+            className={`min-h-11 cursor-pointer border-[1.5px] px-4 py-2.5 text-sm font-semibold transition-colors active:scale-95 ${
+              isSelected ? tag.activeClass : 'border-ink bg-transparent text-ink hover:bg-paper-light'
+            }`}
+          >
+            {tag.label}
+          </button>
+        );
+      })}
     </div>
   );
 };

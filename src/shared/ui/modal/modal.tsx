@@ -6,9 +6,11 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
+  /** Подпись для скринридеров. */
+  label?: string;
 }
 
-export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
+export const Modal = ({ isOpen, onClose, children, label }: ModalProps) => {
   // Закрытие по ESC
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -32,33 +34,25 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      onClick={onClose}
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
       {/* Оверлей */}
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-ink/60 backdrop-blur-sm" />
 
       {/* Контент модалки */}
       <div
-        className="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        role="dialog"
+        aria-modal="true"
+        aria-label={label}
+        className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto bg-paper-light shadow-polaroid"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Кнопка закрытия */}
         <button
+          type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/90 hover:bg-white shadow-lg transition-colors"
+          className="absolute top-3 right-3 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-paper/95 text-ink shadow-lg transition-colors hover:bg-white"
           aria-label="Закрыть"
         >
-          <svg
-            className="w-5 h-5 text-gray-600"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+          <svg className="h-5 w-5" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
             <path d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
@@ -68,4 +62,3 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
     </div>
   );
 };
-

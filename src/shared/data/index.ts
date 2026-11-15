@@ -12,4 +12,5 @@ export {
   ROUTE_STYLE,
   ROUTE_STYLE_BRIGHT_CYAN,
   ROUTE_STYLE_TEAL,
+  NORTH_TRIP_STOPS,
 } from './travel-route';

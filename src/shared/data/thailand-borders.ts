@@ -520,11 +520,11 @@ export const THAILAND_BORDER_COORDINATES: [number, number][] = [
  * Настройки стиля для границы
  */
 export const BORDER_STYLE = {
-  strokeColor: '#FF6B6B', // Красный цвет
-  strokeOpacity: 0.8,
-  strokeWidth: 3,
-  fillColor: '#FF6B6B',
-  fillOpacity: 0.1,
+  strokeColor: '#2A241D', // Чернила — дизайн «Дневник путешественницы»
+  strokeOpacity: 0.7,
+  strokeWidth: 2,
+  fillColor: '#E7C873',
+  fillOpacity: 0.12,
 } as const;
 
 /**

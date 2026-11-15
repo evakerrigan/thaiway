@@ -78,6 +78,8 @@ interface YandexMapProps {
     strokeColor: string;
     strokeOpacity: number;
     strokeWidth: number;
+    /** Тип линии Яндекс.Карт: 'solid', 'dash', 'dot' и т.д. */
+    strokeStyle?: string;
   };
   routePlaceIds?: string[];
   /** Центр карты по умолчанию. */
@@ -213,6 +215,9 @@ export const YandexMap = ({
             strokeColor: style.strokeColor,
             strokeOpacity: style.strokeOpacity,
             strokeWidth: style.strokeWidth,
+            ...('strokeStyle' in style && style.strokeStyle
+              ? { strokeStyle: style.strokeStyle }
+              : {}),
           }
         );
         if (routePolylineRef.current) {
@@ -251,10 +256,10 @@ export const YandexMap = ({
 
       if (isRoutePlaceId) {
         preset = 'islands#circleDotIcon';
-        iconColor = '#00CED1';
+        iconColor = MARKER_COLORS.route;
       } else if (hasRank) {
-        preset = 'islands#violetStretchyIcon';
-        iconColor = undefined;
+        preset = 'islands#blueStretchyIcon';
+        iconColor = MARKER_COLORS.top;
         properties.iconContent = String(place.rank);
       }
 
@@ -317,6 +322,12 @@ export const YandexMap = ({
     />
   );
 };
+
+/** Цвета меток в палитре «Дневник путешественницы». */
+const MARKER_COLORS = {
+  route: '#B8432A',
+  top: '#2E6A57',
+} as const;
 
 function getMarkerPreset(category?: Place['category']): string {
   const presets: Record<NonNullable<Place['category']>, string> = {
