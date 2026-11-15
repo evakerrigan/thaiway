@@ -194,17 +194,18 @@ export const TOP_PLACES: Place[] = [
     coordinates: { lat: 13.413746, lng: 103.866548 },
     category: 'temple',
     googleMapsUrl: 'https://maps.app.goo.gl/ZXWVJvhrL8EsFdtW9',
-    image: '/top-places/angkor-wat1.jpg',
+    image: '/top-places/angkor-sun.jpg',
     description:
       'Огромная сеть старинных храмов в Камбодже. Лететь из Бангкока около часа, билеты дешёвые.',
     fullDescription:
       'Из Бангкока — слетать на самолёте в Ангкор Ват в Камбодже. Больше в Камбодже делать нечего, но Ангкор Ват увидеть обязан каждый. Лететь около часа, билеты дешёвые. Лучше на 3 дня — чтобы приезжать из отеля в Ангкор Ват перед рассветом. Это особое место. И он огромный — там целая сеть из старинных храмов.',
     media: [
-      { type: 'image', src: '/top-places/angkor-wat1.jpg', alt: 'Ангкор Ват 1' },
-      { type: 'image', src: '/top-places/angkor-wat2.jpg', alt: 'Ангкор Ват 2' },
-      { type: 'image', src: '/top-places/angkor-wat3.jpg', alt: 'Ангкор Ват 3' },
-      { type: 'image', src: '/top-places/angkor-wat4.jpg', alt: 'Ангкор Ват 4' },
-      { type: 'image', src: '/top-places/angkor-wat5.jpg', alt: 'Ангкор Ват 5' },
+      // Первое фото — обложка места (карточки, окно на карте).
+      { type: 'image', src: '/top-places/angkor-sun.jpg', alt: 'Силуэт башен Ангкор Вата на фоне солнца' },
+      { type: 'image', src: '/top-places/angkor-view.jpg', alt: 'Вид сверху на древние стены и джунгли Ангкора' },
+      { type: 'image', src: '/top-places/angkor-face.jpg', alt: 'Каменная башня с высеченным ликом' },
+      { type: 'image', src: '/top-places/angkor-tower.jpg', alt: 'Резная каменная башня храма' },
+      { type: 'image', src: '/top-places/angkor-roots.jpg', alt: 'Корни огромного дерева, оплетающие руины храма' },
     ],
   },
   {
