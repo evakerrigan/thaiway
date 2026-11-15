@@ -8,7 +8,8 @@ export interface MediaItem {
 export interface Place {
   id: string;
   name: string;
-  coordinates: {
+  /** Координаты. Если точное место неизвестно — не указываем, и место не показывается на карте. */
+  coordinates?: {
     lat: number;
     lng: number;
   };

@@ -280,7 +280,12 @@ export const YandexMap = ({
       map.geoObjects.add(clustererRef.current);
     }
 
-    places.forEach((place) => {
+    // Места без координат (точное место неизвестно) на карту не ставим.
+    const mappable = places.filter(
+      (p): p is Place & { coordinates: NonNullable<Place['coordinates']> } => Boolean(p.coordinates)
+    );
+
+    mappable.forEach((place) => {
       const isRoutePlaceId = routePlaceIds.includes(place.id);
       const hasRank = typeof place.rank === 'number';
 
@@ -329,9 +334,9 @@ export const YandexMap = ({
       clustererRef.current.add(placemarksRef.current);
     }
 
-    if (fitToPlaces && places.length > 0) {
-      const lats = places.map((p) => p.coordinates.lat);
-      const lngs = places.map((p) => p.coordinates.lng);
+    if (fitToPlaces && mappable.length > 0) {
+      const lats = mappable.map((p) => p.coordinates.lat);
+      const lngs = mappable.map((p) => p.coordinates.lng);
       const bounds = [
         [Math.min(...lats), Math.min(...lngs)],
         [Math.max(...lats), Math.max(...lngs)],

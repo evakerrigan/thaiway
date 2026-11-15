@@ -51,4 +51,18 @@ export const CAFES: Place[] = [
       { type: 'image', src: '/cafes/baan-langsuan.jpg', alt: 'Стена из картин в резных рамах и ваза с цветком лотоса в кафе Baan Langsuan' },
     ],
   },
+  {
+    id: 'road-garden-cafe',
+    name: 'Кафе в саду с гамаками',
+    region: 'По дороге из Бангкока',
+    category: 'cafe',
+    // Точное место неизвестно — без координат кафе не показывается на карте.
+    // TODO: когда найдётся — добавить coordinates и googleMapsUrl, поправить название.
+    description: 'Кафе в саду по дороге из Бангкока — со столиками на корягах и гамаками.',
+    media: [
+      { type: 'image', src: '/cafes/road-cafe-welcome.jpg', alt: 'Фигурка девочки с табличкой «добро пожаловать» среди зелени' },
+      { type: 'image', src: '/cafes/road-cafe-table.jpg', alt: 'Стеклянный столик на коряге с цветами в саду кафе' },
+      { type: 'image', src: '/cafes/road-cafe-hammock.jpg', alt: 'Ребёнок отдыхает в гамаке в саду кафе' },
+    ],
+  },
 ];
