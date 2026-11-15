@@ -67,7 +67,7 @@ export const TOP_PLACES: Place[] = [
     region: 'Чианграй',
     name: 'Кафе Lalitta',
     coordinates: { lat: 19.9424463, lng: 99.8115731 },
-    category: 'other',
+    category: 'cafe',
     googleMapsUrl: 'https://maps.app.goo.gl/s1BekjmPzRWHzjd36',
     image: '/top-places/lalitta1.jpg',
     description: 'Атмосферное кафе в северном Таиланде с уникальным интерьером и видами.',

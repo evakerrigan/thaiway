@@ -75,6 +75,7 @@ function getCategoryLabel(category: Place['category']): string {
     island: 'Остров',
     beach: 'Пляж',
     temple: 'Храм',
+    cafe: 'Кафе',
     other: 'Место',
   };
   return category ? labels[category] : 'Место';

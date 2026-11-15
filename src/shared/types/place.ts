@@ -14,7 +14,7 @@ export interface Place {
   };
   description: string;
   image?: string;
-  category?: 'city' | 'island' | 'beach' | 'temple' | 'other';
+  category?: 'city' | 'island' | 'beach' | 'temple' | 'cafe' | 'other';
   /** Регион / провинция — короткая подпись под названием. */
   region?: string;
   /** Ранг в списке «11 лучших мест». 1 — лучшее. Если задан — место отображается на странице /top-places. */

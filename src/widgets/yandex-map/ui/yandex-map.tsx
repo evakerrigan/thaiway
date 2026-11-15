@@ -335,6 +335,7 @@ function getMarkerPreset(category?: Place['category']): string {
     island: 'islands#blueIcon',
     beach: 'islands#lightBlueIcon',
     temple: 'islands#violetIcon',
+    cafe: 'islands#brownIcon',
     other: 'islands#grayIcon',
   };
   return category ? presets[category] : 'islands#redIcon';
@@ -346,6 +347,7 @@ function getMarkerColor(category?: Place['category']): string {
     island: '#1E98FF',
     beach: '#56CCF2',
     temple: '#9C27B0',
+    cafe: '#8A5A12',
     other: '#757575',
   };
   return category ? colors[category] : '#FF0000';
