@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="2 1.5 32 33">
+  <!-- Храм из логотипа в шапке (src/widgets/header/ui/header.tsx), линии толще — чтобы читался в 16 px -->
+  <style>
+    .temple { stroke: #B8432A; }
+    @media (prefers-color-scheme: dark) {
+      .temple { stroke: #E5866B; }
+    }
+  </style>
+  <path
+    class="temple"
+    d="M18 3v5M14 12c0-3 2-4 4-4s4 1 4 4M11 20c0-4 3-8 7-8s7 4 7 8M8 33h20M10 33V20h16v13M15 33v-6h6v6"
+    fill="none"
+    stroke-width="2.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
