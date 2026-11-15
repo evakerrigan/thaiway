@@ -46,11 +46,18 @@ export const TopPlaceCard = forwardRef<HTMLElement, TopPlaceCardProps>(({ place 
         {place.fullDescription || place.description}
       </p>
 
-      {place.media && place.media.length > 0 && (
-        <div className="mt-8">
+      <div className="mt-8">
+        {place.media && place.media.length > 0 ? (
           <MediaGallery items={place.media} title={place.name} />
-        </div>
-      )}
+        ) : (
+          // Фото пока нет — залитый квадрат в рамке, размером с миниатюру галереи.
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 md:grid-cols-4">
+            <div aria-hidden className="-rotate-[1.5deg] bg-white p-2 shadow-paper">
+              <div className="aspect-square bg-jade" />
+            </div>
+          </div>
+        )}
+      </div>
     </article>
   );
 });

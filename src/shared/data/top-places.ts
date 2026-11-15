@@ -55,14 +55,11 @@ export const TOP_PLACES: Place[] = [
     coordinates: { lat: 18.58849, lng: 98.487061 },
     category: 'other',
     googleMapsUrl: 'https://maps.app.goo.gl/qNNN5dUa6NQae53L7',
-    image: '/top-places/doi-inthanon.jpg',
+    // Фото пока нет — вместо него показывается залитый квадрат (см. PlaceCover и TopPlaceCard).
     description:
       'Самая высокая точка Таиланда (2 565 м) — «крыша королевства» с облаками, чеди и горными тропами.',
     fullDescription:
       'Дой Интанон — самая высокая точка Таиланда (2 565 м), её называют «крышей королевства». Здесь можно встретить рассвет среди облаков, заглянуть в королевские чеди и пройтись по тропе Анг Ка — мшистому лесу с орхидеями и редкими птицами.',
-    media: [
-      { type: 'image', src: '/top-places/doi-inthanon.jpg', alt: 'Дой Интанон' },
-    ],
   },
   {
     id: 'lalitta-cafe',
@@ -80,7 +77,6 @@ export const TOP_PLACES: Place[] = [
       { type: 'image', src: '/top-places/lalitta1.jpg', alt: 'Кафе Lalitta — фото 1' },
       { type: 'video', src: '/top-places/lalitta1.mp4', alt: 'Кафе Lalitta — видео 1' },
       { type: 'image', src: '/top-places/lalitta2.jpg', alt: 'Кафе Lalitta — фото 2' },
-      { type: 'video', src: '/top-places/lalitta2.mp4', alt: 'Кафе Lalitta — видео 2' },
     ],
   },
   {
@@ -112,13 +108,12 @@ export const TOP_PLACES: Place[] = [
     coordinates: { lat: 8.128054, lng: 98.922938 },
     category: 'temple',
     googleMapsUrl: 'https://maps.app.goo.gl/5DzS7jiruumVUowF6',
-    image: '/top-places/Cave-Temple1.jpg',
+    image: '/top-places/Cave-Temple2.jpg',
     description:
       'Смотровая площадка с пагодой на вершине горы в провинции Краби. 1234 крутых ступеньки с обезьянками вокруг.',
     fullDescription:
       'Viewpoint at Tiger Cave Temple — закат с пагоды на вершине горы в провинции Краби. 1234 крутых ступеньки наверх, с обезьянками вокруг. Прийти надо заранее — успеть подняться до заката и насладиться видом, который открывается со смотровой.',
     media: [
-      { type: 'image', src: '/top-places/Cave-Temple1.jpg', alt: 'Tiger Cave Temple 1' },
       { type: 'image', src: '/top-places/Cave-Temple2.jpg', alt: 'Tiger Cave Temple 2' },
     ],
   },
