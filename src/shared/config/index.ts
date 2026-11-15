@@ -1,1 +1,1 @@
-export { ROUTES, NAV_ITEMS, HOME_SECTIONS } from './routes';
+export { ROUTES, NAV_ITEMS, HOME_SECTIONS, NORTH_TRIP_MAP_ANCHOR } from './routes';

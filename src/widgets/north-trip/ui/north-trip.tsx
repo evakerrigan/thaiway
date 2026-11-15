@@ -1,11 +1,18 @@
+import Link from 'next/link';
 import { Container } from '@/shared/ui/container';
-import { HOME_SECTIONS } from '@/shared/config';
+import { HOME_SECTIONS, NORTH_TRIP_MAP_ANCHOR, ROUTES } from '@/shared/config';
 import { NORTH_TRIP_STOPS } from '@/shared/data';
 
 interface NorthTripProps {
-  /** Включить слой маршрута и прокрутить к карте. */
+  /**
+   * Что делает «Показать на карте». Если задано — вызывается (на /north-trip прокручивает к карте).
+   * Если нет — кнопка ведёт на страницу /north-trip прямо к карте (так на главной).
+   */
   onShowOnMap?: () => void;
 }
+
+const SHOW_ON_MAP_CLASS =
+  'inline-flex cursor-pointer items-center gap-2 rounded-full bg-terracotta px-5 py-3.5 font-bold text-white transition-colors hover:bg-terracotta-hover';
 
 /** Лента остановок маршрута «Путешествие на север на машине». */
 export const NorthTrip = ({ onShowOnMap }: NorthTripProps) => {
@@ -23,14 +30,14 @@ export const NorthTrip = ({ onShowOnMap }: NorthTripProps) => {
               </h2>
               <p className="m-0 text-base text-ink-soft">Древние столицы, горы и самые красивые храмы севера.</p>
             </div>
-            {onShowOnMap && (
-              <button
-                type="button"
-                onClick={onShowOnMap}
-                className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-terracotta px-5 py-3.5 font-bold text-white transition-colors hover:bg-terracotta-hover"
-              >
+            {onShowOnMap ? (
+              <button type="button" onClick={onShowOnMap} className={SHOW_ON_MAP_CLASS}>
                 Показать на карте
               </button>
+            ) : (
+              <Link href={`${ROUTES.NORTH_TRIP}#${NORTH_TRIP_MAP_ANCHOR}`} className={SHOW_ON_MAP_CLASS}>
+                Показать на карте
+              </Link>
             )}
           </div>
           <ol className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-3 lg:grid-cols-6">

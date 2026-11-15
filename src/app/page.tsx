@@ -13,19 +13,8 @@ import { TravelFacts } from '@/widgets/travel-facts';
 import { TopPreview } from '@/widgets/top-preview';
 import { NorthTrip } from '@/widgets/north-trip';
 import { Calculator } from '@/widgets/calculator';
-import { PLACES } from '@/shared/data';
+import { NORTH_TRIP_PLACE_IDS as ROUTE_PLACE_IDS, PLACES } from '@/shared/data';
 import { Place } from '@/shared/types';
-
-const ROUTE_PLACE_IDS = [
-  'bangkok',
-  'phitsanulok',
-  'ayutthaya',
-  'lopburi',
-  'nakhonsawan',
-  'chiangrai',
-  'chiangmai',
-  'mae-ya-waterfall',
-];
 
 const INITIAL_ACTIVE_TAGS = ['thailand', 'north-trip', 'top-places'];
 
@@ -50,11 +39,6 @@ export default function Home() {
     setActiveTags((prev) =>
       prev.includes(tagId) ? prev.filter((t) => t !== tagId) : [...prev, tagId]
     );
-  };
-
-  const handleShowRouteOnMap = () => {
-    setActiveTags((prev) => (prev.includes('north-trip') ? prev : [...prev, 'north-trip']));
-    document.getElementById(HOME_SECTIONS.MAP)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const showBorders = activeTags.includes('thailand');
@@ -119,7 +103,8 @@ export default function Home() {
       </section>
 
       <TopPreview />
-      <NorthTrip onShowOnMap={handleShowRouteOnMap} />
+      {/* «Показать на карте» ведёт на страницу /north-trip к карте маршрута */}
+      <NorthTrip />
 
       <section id={HOME_SECTIONS.BUDGET} aria-labelledby="budget-title" className="bg-jade py-20 text-paper">
         <Container className="flex flex-wrap items-center gap-12">

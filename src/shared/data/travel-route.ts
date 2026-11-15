@@ -79,7 +79,22 @@ export const ROUTE_STYLE_TEAL = {
 
 
 /**
- * Остановки маршрута «Путешествие на север на машине» — для ленты на главной.
+ * id мест (из PLACES), которые отмечаются на карте как точки маршрута на север.
+ * Используется на главной и на странице /north-trip.
+ */
+export const NORTH_TRIP_PLACE_IDS = [
+  'bangkok',
+  'phitsanulok',
+  'ayutthaya',
+  'lopburi',
+  'nakhonsawan',
+  'chiangrai',
+  'chiangmai',
+  'mae-ya-waterfall',
+];
+
+/**
+ * Остановки маршрута «Путешествие на север на машине» — для ленты остановок (главная и /north-trip).
  */
 export const NORTH_TRIP_STOPS = [
   { id: 'bangkok', label: 'Старт', name: 'Бангкок', note: 'Большой дворец и город, который никогда не спит' },
