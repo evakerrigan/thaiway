@@ -62,3 +62,28 @@ body {
   background: var(--tape);
   color: var(--ink);
 }
+
+/*
+ * Карточка места, на которую пришли по ссылке с якорем (/cafes#place-vana-tara):
+ * ненадолго подсвечиваем её терракотовой рамкой, чтобы было видно, о каком месте речь.
+ */
+@keyframes place-target-flash {
+  0%,
+  60% {
+    box-shadow: 0 0 0 4px var(--terracotta), 0 14px 36px rgba(60, 40, 20, 0.12);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent, 0 14px 36px rgba(60, 40, 20, 0.12);
+  }
+}
+
+.place-card:target {
+  animation: place-target-flash 2.5s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .place-card:target {
+    animation: none;
+    box-shadow: 0 0 0 4px var(--terracotta);
+  }
+}

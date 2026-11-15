@@ -11,6 +11,8 @@ interface CafesMapProps {
 
 /** Все метки кафе одного «кофейного» цвета, без номеров из топа. */
 const CAFE_MARKER = { preset: 'islands#dotIcon', iconColor: '#8A5A12' };
+/** Близкие кафе (например, два в Бангкоке) сливаются в коричневый кружок с числом. */
+const CAFE_CLUSTER_PRESET = 'islands#invertedBrownClusterIcons';
 
 /**
  * Карта кафе: граница Таиланда и метки кафе.
@@ -30,11 +32,12 @@ export const CafesMap = ({ cafes }: CafesMapProps) => {
           onPlaceClick={handlePlaceClick}
           showBorders
           markerStyle={CAFE_MARKER}
+          clusterPreset={CAFE_CLUSTER_PRESET}
           fitToPlaces
         />
       </div>
       <p className="m-0 px-2 pt-3 text-center font-hand text-2xl text-ink-soft">
-        нажмите на метку — прокручу к кафе, или приблизьте карту
+        нажмите на метку — прокручу к кафе; цифра на кружке — сколько кафе рядом
       </p>
     </section>
   );

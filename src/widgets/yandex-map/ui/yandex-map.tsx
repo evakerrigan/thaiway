@@ -15,6 +15,12 @@ interface YandexGeoObjectCollection {
   remove(geoObject: YandexGeoObject): void;
 }
 
+/** Кластеризатор: объединяет близкие метки в кружок с их количеством. Сам является геообъектом. */
+interface YandexClusterer extends YandexGeoObject {
+  add(geoObjects: YandexGeoObject[]): void;
+  removeAll(): void;
+}
+
 interface YandexMapContainer {
   fitToViewport?: () => void;
 }
@@ -50,6 +56,7 @@ interface YandexMapsApi {
     properties?: Record<string, unknown>,
     options?: Record<string, unknown>
   ) => YandexGeoObject;
+  Clusterer: new (options?: Record<string, unknown>) => YandexClusterer;
 }
 
 declare global {
@@ -93,6 +100,11 @@ interface YandexMapProps {
    * перекрывает стили маршрута/топа и не выводит номер места на метке.
    */
   markerStyle?: { preset: string; iconColor?: string };
+  /**
+   * Объединять близкие метки в кружок с числом (например, «2» над Бангкоком).
+   * Клик по кружку приближает карту, и метки расходятся. Значение — пресет иконок кластера.
+   */
+  clusterPreset?: string;
 }
 
 export const YandexMap = ({
@@ -110,11 +122,13 @@ export const YandexMap = ({
   zoom,
   fitToPlaces = false,
   markerStyle,
+  clusterPreset,
 }: YandexMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<YandexMapInstance | null>(null);
   const isInitializedRef = useRef(false);
   const placemarksRef = useRef<YandexGeoObject[]>([]);
+  const clustererRef = useRef<YandexClusterer | null>(null);
   const borderPolygonRef = useRef<YandexGeoObject | null>(null);
   const routePolylineRef = useRef<YandexGeoObject | null>(null);
 
@@ -169,6 +183,7 @@ export const YandexMap = ({
         mapInstanceRef.current = null;
       }
       placemarksRef.current = [];
+      clustererRef.current = null;
       borderPolygonRef.current = null;
       routePolylineRef.current = null;
     };
@@ -246,10 +261,24 @@ export const YandexMap = ({
     const map = mapInstanceRef.current;
     if (!isMapReady || !map || !window.ymaps) return;
 
-    placemarksRef.current.forEach((placemark) => {
-      map.geoObjects.remove(placemark);
-    });
+    if (clustererRef.current) {
+      clustererRef.current.removeAll();
+    } else {
+      placemarksRef.current.forEach((placemark) => {
+        map.geoObjects.remove(placemark);
+      });
+    }
     placemarksRef.current = [];
+
+    if (clusterPreset && !clustererRef.current) {
+      clustererRef.current = new window.ymaps.Clusterer({
+        preset: clusterPreset,
+        // Клик по кластеру приближает карту к его меткам
+        clusterDisableClickZoom: false,
+        hasBalloon: false,
+      });
+      map.geoObjects.add(clustererRef.current);
+    }
 
     places.forEach((place) => {
       const isRoutePlaceId = routePlaceIds.includes(place.id);
@@ -290,9 +319,15 @@ export const YandexMap = ({
         });
       }
 
-      map.geoObjects.add(placemark);
+      if (!clustererRef.current) {
+        map.geoObjects.add(placemark);
+      }
       placemarksRef.current.push(placemark);
     });
+
+    if (clustererRef.current) {
+      clustererRef.current.add(placemarksRef.current);
+    }
 
     if (fitToPlaces && places.length > 0) {
       const lats = places.map((p) => p.coordinates.lat);
@@ -306,7 +341,7 @@ export const YandexMap = ({
         zoomMargin: 40,
       });
     }
-  }, [places, onPlaceClick, routePlaceIds, isMapReady, fitToPlaces]);
+  }, [places, onPlaceClick, routePlaceIds, isMapReady, fitToPlaces, clusterPreset]);
 
   useEffect(() => {
     if (!isMapReady || !mapRef.current || !mapInstanceRef.current) return;
