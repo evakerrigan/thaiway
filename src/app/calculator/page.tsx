@@ -71,8 +71,8 @@ const TICKET_LINKS = [
     href: 'https://www.aviasales.ru/',
   },
   {
-    title: 'Телеграм-чат',
-    note: 'Чат в Телеграме — можно спросить про билеты и перелёты.',
+    title: 'Телеграм-канал',
+    note: 'Канал в Телеграме, где публикуются горящие билеты.',
     label: 't.me/hkt_bkk',
     href: 'https://t.me/hkt_bkk',
   },
