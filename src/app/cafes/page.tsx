@@ -1,7 +1,19 @@
+import type { Metadata } from 'next';
 import { Container } from '@/shared/ui/container';
 import { HandNote, Tape } from '@/shared/ui/journal';
 import { TopPlaceCard } from '@/widgets/top-place-card';
 import { getPlacesByCategory } from '@/shared/data';
+import { ROUTES } from '@/shared/config';
+
+const description =
+  'Любимые кафе Таиланда из личных поездок: кафе Lalitta в Чианграе, котокафе в Бангкоке и другие места, где хочется сделать паузу.';
+
+export const metadata: Metadata = {
+  title: 'Кафе Таиланда',
+  description,
+  alternates: { canonical: ROUTES.CAFES },
+  openGraph: { title: 'Кафе Таиланда', description, url: ROUTES.CAFES },
+};
 
 // Все места с category: 'cafe' попадают сюда автоматически.
 const CAFES = getPlacesByCategory('cafe');
