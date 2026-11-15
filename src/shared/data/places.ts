@@ -1,5 +1,6 @@
 import { Place } from '@/shared/types';
 import { TOP_PLACES } from './top-places';
+import { CAFES } from './cafes';
 
 /**
  * Города маршрута «Путешествие на север на машине».
@@ -73,11 +74,11 @@ export const ROUTE_PLACES: Place[] = [
 
 /**
  * Полная база мест.
- * Объединяем городские точки маршрута и топ-места.
+ * Объединяем городские точки маршрута, топ-места и кафе.
  * При совпадении id (например, `mae-ya-waterfall`) запись из TOP_PLACES перезаписывает базовую.
  */
 const mergedById = new Map<string, Place>();
-[...ROUTE_PLACES, ...TOP_PLACES].forEach((p) => mergedById.set(p.id, p));
+[...ROUTE_PLACES, ...TOP_PLACES, ...CAFES].forEach((p) => mergedById.set(p.id, p));
 export const PLACES: Place[] = Array.from(mergedById.values());
 
 /**

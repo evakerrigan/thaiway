@@ -1,5 +1,6 @@
 export { PLACES, ROUTE_PLACES, getPlaceById, getPlacesByCategory } from './places';
 export { TOP_PLACES, TOP_PLACE_IDS } from './top-places';
+export { CAFES } from './cafes';
 export {
   THAILAND_BORDER_COORDINATES,
   BORDER_STYLE,
